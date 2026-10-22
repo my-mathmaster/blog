@@ -1,0 +1,228 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>树上换根dp | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="树上换根dp 换根dp: 换根dp往往需要处理去掉一个子树这样的问题，我们可以使用前后缀和的方法来优化复杂度 Problem - 543D - Codeforces 题意：一个国家有n个城市，n-1条道路，保证是一棵树，起初所有道路都是破旧的。对于每个点x，求以x为首都的时候修建道路使得成为完美国家的修建方案数。对于完美国家的定义是：从首都出发，到达任何城市的最短路上最多只有一条破旧的路。 So">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树上换根dp">
+<meta property="og:url" content="https://blog.afywty.top/posts/b2414559.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="树上换根dp 换根dp: 换根dp往往需要处理去掉一个子树这样的问题，我们可以使用前后缀和的方法来优化复杂度 Problem - 543D - Codeforces 题意：一个国家有n个城市，n-1条道路，保证是一棵树，起初所有道路都是破旧的。对于每个点x，求以x为首都的时候修建道路使得成为完美国家的修建方案数。对于完美国家的定义是：从首都出发，到达任何城市的最短路上最多只有一条破旧的路。 So">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://api.xsot.cn/bing?jump=true?961">
+<meta property="article:published_time" content="2024-09-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T17:46:12.472Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="算法 数学 技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://api.xsot.cn/bing?jump=true?961"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "树上换根dp",
+  "url": "https://blog.afywty.top/posts/b2414559.html",
+  "image": "https://api.xsot.cn/bing?jump=true?961",
+  "datePublished": "2024-09-14T16:00:00.000Z",
+  "dateModified": "2026-10-22T17:46:12.472Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/b2414559.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '树上换根dp',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/head.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://api.xsot.cn/bing?jump=true?961);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">树上换根dp</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">树上换根dp</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-14T16:00:00.000Z" title="发表于 2024-09-15 00:00:00">2024-09-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T17:46:12.472Z" title="更新于 2026-10-23 01:46:12">2026-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ICPC/">ICPC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-10-23 01:46:12&quot;}" hidden></div><h1 id="树上换根dp"><a class="markdownIt-Anchor" href="#树上换根dp"></a> 树上换根dp</h1>
+<p>换根dp: 换根dp往往需要处理去掉一个子树这样的问题，我们可以使用前后缀和的方法来优化复杂度</p>
+<p><a target="_blank" rel="noopener" href="https://codeforces.com/problemset/problem/543/D">Problem - 543D - Codeforces</a></p>
+<p>题意：一个国家有n个城市，n-1条道路，保证是一棵树，起初所有道路都是破旧的。对于每个点x，求以x为首都的时候修建道路使得成为完美国家的修建方案数。对于完美国家的定义是：从首都出发，到达任何城市的最短路上最多只有一条破旧的路。</p>
+<p>Sol：考虑换根dp。首先先求出1为首都的答案。<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>u</mi><mo stretchy="false">]</mo><mtext>表示</mtext><mi>u</mi><mtext>的子树的方案数，考虑一个具体儿子</mtext><mi>v</mi><mtext>。如果</mtext><mi>u</mi><mo>−</mo><mi>v</mi><mtext>这条路是被修复了，则方</mtext></mrow><annotation encoding="application/x-tex">dp[u]表示u的子树的方案数，考虑一个具体儿子v。如果u-v这条路是被修复了，则方</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">u</span><span class="mclose">]</span><span class="mord cjk_fallback">表</span><span class="mord cjk_fallback">示</span><span class="mord mathnormal">u</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">子</span><span class="mord cjk_fallback">树</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">案</span><span class="mord cjk_fallback">数</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">考</span><span class="mord cjk_fallback">虑</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">个</span><span class="mord cjk_fallback">具</span><span class="mord cjk_fallback">体</span><span class="mord cjk_fallback">儿</span><span class="mord cjk_fallback">子</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord cjk_fallback">。</span><span class="mord cjk_fallback">如</span><span class="mord cjk_fallback">果</span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">条</span><span class="mord cjk_fallback">路</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">被</span><span class="mord cjk_fallback">修</span><span class="mord cjk_fallback">复</span><span class="mord cjk_fallback">了</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">则</span><span class="mord cjk_fallback">方</span></span></span></span>案数是<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>v</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">dp[v]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span></span></span></span>。如果如果u-v这条路是破旧的，则v的子树的路必须全部被修复，只有唯一方案。</p>
+<p>转移：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>u</mi><mo stretchy="false">]</mo><mo>∗</mo><mo>=</mo><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>v</mi><mo stretchy="false">]</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">dp[u]*=dp[v]+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">u</span><span class="mclose">]</span><span class="mord">∗</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></p>
+<p><img src="https://www.ringalgo.com/media/content_img/treepath-12.png" alt="img" /></p>
+<p>考虑换根：进行第二遍dfs，一般是先计算向上的答案，再递归进去。考虑原先父亲对自己的贡献，up[v]表示在以v为根的情形下，考虑u的部分子树（以v为根的方向）的贡献。</p>
+<p>具体哪部分？答：之前是u祖先现在是u子树的方案数。</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mi>r</mi><mi>o</mi><mi>o</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">u = root</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">o</span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span></span></span></span> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>p</mi><mo stretchy="false">[</mo><mi>v</mi><mo stretchy="false">]</mo><mo>∗</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">up[v]*=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">u</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span><span class="mord">∗</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo mathvariant="normal">≠</mo><mi>r</mi><mi>o</mi><mi>o</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">u \ne root</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="inner"><span class="mrel"></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">o</span><span class="mord mathnormal">o</span><span class="mord mathnormal">t</span></span></span></span>    <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mi>p</mi><mo stretchy="false">[</mo><mi>v</mi><mo stretchy="false">]</mo><mo>∗</mo><mo>=</mo><mo stretchy="false">(</mo><mi>u</mi><mi>p</mi><mo stretchy="false">[</mo><mi>u</mi><mo stretchy="false">]</mo><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">up[v]*=(up[u]+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">u</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span><span class="mord">∗</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">u</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+<p>进一步考虑剩下那部分，也就是之前是u的子树现在也是u子树。一个简单的想法你可能会发现也就是原先的儿子们dp值乘积贡献去除掉v的贡献，也就是<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>u</mi><mo stretchy="false">]</mo><mo>∗</mo><mi>i</mi><mi>n</mi><mi>v</mi><mo stretchy="false">(</mo><mi>d</mi><mi>p</mi><mo stretchy="false">[</mo><mi>v</mi><mo stretchy="false">]</mo><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">dp[u]*inv(dp[v]+1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">u</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>。但是首先出题人可以要答案取模的质数不是质数，逆元难度增加，进一步即使是质数，如本题是<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>e</mi><mn>9</mn><mo>+</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">1e9+7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord mathnormal">e</span><span class="mord">9</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span></span></span></span>，但是也容易构造成取模为0的数据出现，导致不存在逆元，计算出错。</p>
+<ul>
+<li>考虑一个trick，我们只需要维护前缀贡献，后缀贡献，假设v是第i个儿子，去除v的贡献就是<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mi>r</mi><mi>e</mi><mo stretchy="false">[</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo><mo>∗</mo><mi>s</mi><mi>u</mi><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">pre[i-1]*suf[i+1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>，预处理这个就是可以<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span>计算这部分了。</li>
+<li>实现的细节：对于自己父亲是根的时候，根不存在父亲，计算up的时候需要特判</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">dp</span><span class="params">(n + <span class="number">1</span>)</span>, <span class="title">up</span><span class="params">(n + <span class="number">1</span>)</span></span>;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">e</span>(n + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">        <span class="type">int</span> x;</span><br><span class="line">        cin &gt;&gt; x;</span><br><span class="line">        e[x].<span class="built_in">push_back</span>(i);</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">pre</span>(n + <span class="number">1</span>), <span class="built_in">suf</span>(n + <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">auto</span> dfs = [&amp;](<span class="keyword">auto</span> self, <span class="type">int</span> u) -&gt; <span class="type">void</span> &#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; tmp;</span><br><span class="line">        dp[u] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> v : e[u]) &#123;</span><br><span class="line">            <span class="built_in">self</span>(self, v);</span><br><span class="line">            dp[u] *= (dp[v] + <span class="number">1</span>);</span><br><span class="line">            dp[u] %= mod;</span><br><span class="line">            tmp.<span class="built_in">push_back</span>(dp[v] + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> sz = tmp.<span class="built_in">size</span>();</span><br><span class="line">        pre[u].<span class="built_in">resize</span>(sz + <span class="number">1</span>), suf[u].<span class="built_in">resize</span>(sz + <span class="number">2</span>);</span><br><span class="line">        pre[u][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        suf[u][sz + <span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= sz; i++) &#123;</span><br><span class="line">            pre[u][i] = pre[u][i - <span class="number">1</span>] * tmp[i - <span class="number">1</span>];</span><br><span class="line">            pre[u][i] %= mod;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = sz; i &gt;= <span class="number">1</span>; i--) &#123;</span><br><span class="line">            suf[u][i] = suf[u][i + <span class="number">1</span>] * tmp[i - <span class="number">1</span>];</span><br><span class="line">            suf[u][i] %= mod;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">dfs</span>(dfs, <span class="number">1</span>);  <span class="comment">// 以1为根的答案</span></span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">ans</span><span class="params">(n + <span class="number">1</span>)</span></span>;</span><br><span class="line">    up[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">auto</span> cal = [&amp;](<span class="keyword">auto</span> self, <span class="type">int</span> u) -&gt; <span class="type">void</span> &#123;</span><br><span class="line">        <span class="type">int</span> sz = e[u].<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= sz; i++) &#123;</span><br><span class="line">            <span class="type">int</span> v = e[u][i - <span class="number">1</span>];</span><br><span class="line">            up[v] = pre[u][i - <span class="number">1</span>] * suf[u][i + <span class="number">1</span>];</span><br><span class="line">            up[v] %= mod;</span><br><span class="line">            <span class="keyword">if</span> (u &gt; <span class="number">1</span>)</span><br><span class="line">                up[v] *= (<span class="number">1</span> + up[u]);</span><br><span class="line">            up[v] %= mod;</span><br><span class="line">            <span class="built_in">self</span>(self, v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">cal</span>(cal, <span class="number">1</span>);</span><br><span class="line">    ans[<span class="number">1</span>] = dp[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; i++) ans[i] = ((up[i] + <span class="number">1</span>) * dp[i]) % mod;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) cout &lt;&lt; ans[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/b2414559.html">https://blog.afywty.top/posts/b2414559.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://api.xsot.cn/bing?jump=true?961" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/33b8c865.html" title="SPFA"><img class="cover" src="https://api.xsot.cn/bing?jump=true?2728" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">SPFA</div></div><div class="info-2"><div class="info-item-1">SPFA 最短路:保证数据不存在负环的情况下，求1-n最短路 12345678910111213141516171819202122232425262728293031323334353637383940414243struct edge &#123;    int v, w;&#125;;void solve() &#123;    int n, m;    cin &gt;&gt; n &gt;&gt; m;    vector&lt;vector&lt;edge&gt;&gt; e(n + 1);    for (int i = 1; i &lt;= m; i++) &#123;        int u, v, w;        cin &gt;&gt; u &gt;&gt; v &gt;&gt; w;        e[u].push_back(&#123;v, w&#125;);    &#125;    vector&lt;int&gt; dis(n + 1, inf);    auto spfa = [&amp;]() &#123;       ...</div></div></div></a><a class="pagination-related" href="/posts/a421f0b4.html" title="牛客周赛 Round 11"><img class="cover" src="https://api.xsot.cn/bing?jump=true?6434" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">牛客周赛 Round 11</div></div><div class="info-2"><div class="info-item-1">https://ac.nowcoder.com/acm/contest/64593  A题签到 B题值得说得是对非降序的理解：非降序表示数组中的前一个数要&lt;=下一个数 C题也算dp，因为需要注意遍历顺序，计算的是所有子串的的权重，我们知道枚举所有子串需要O(n2)O(n^2)O(n2)的复杂度，按照本题数据范围显然不能O(n3)O(n^3)O(n3)，我们只能在枚举过程中去维护计算每个字串的权重。 本题的特点是一个str的起点一旦确定，它变换的最终形态也就确定。所以我们考虑枚举起点，再枚举终点，对于每个起点终点确定的子串我们考虑假设起点是0的话我们需要变换c0次，起点是1的话我们需要操作c1次，两者取最小值就是当前子串的权重。  ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">理性思考，和平交流</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%91%E4%B8%8A%E6%8D%A2%E6%A0%B9dp"><span class="toc-number">1.</span> <span class="toc-text"> 树上换根dp</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/34811d5f.html" title="贪心"><img src="https://api.xsot.cn/bing?jump=true?5256" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="贪心"/></a><div class="content"><a class="title" href="/posts/34811d5f.html" title="贪心">贪心</a><time datetime="2024-12-21T16:00:00.000Z" title="发表于 2024-12-22 00:00:00">2024-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例"><img src="https://api.xsot.cn/bing?jump=true?9826" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Z函数与扩展KMP算法详解 - 以CF126B为例"/></a><div class="content"><a class="title" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例">Z函数与扩展KMP算法详解 - 以CF126B为例</a><time datetime="2024-12-20T16:00:00.000Z" title="发表于 2024-12-21 00:00:00">2024-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)"><img src="https://api.xsot.cn/bing?jump=true?4177" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round 895 (Div. 3)"/></a><div class="content"><a class="title" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)">Codeforces Round 895 (Div. 3)</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）"><img src="https://api.xsot.cn/bing?jump=true?9167" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="可持久化字典树（Trie）"/></a><div class="content"><a class="title" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）">可持久化字典树（Trie）</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d8850d48.html" title="网格图上问题"><img src="https://api.xsot.cn/bing?jump=true?5800" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网格图上问题"/></a><div class="content"><a class="title" href="/posts/d8850d48.html" title="网格图上问题">网格图上问题</a><time datetime="2024-12-14T16:00:00.000Z" title="发表于 2024-12-15 00:00:00">2024-12-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

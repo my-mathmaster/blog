@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>爱飞鱼的blog - 分享知识，探索世界</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="理性思考，和平交流">
+<meta property="og:type" content="website">
+<meta property="og:title" content="爱飞鱼的blog">
+<meta property="og:url" content="https://blog.afywty.top/page/5/index.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="理性思考，和平交流">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.afywty.top/img/user.png">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="算法 数学 技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.afywty.top/img/user.png"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/page/5/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '爱飞鱼的blog',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'home'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/head.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/bg.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="site-info"><h1 id="site-title">爱飞鱼的blog</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="post_cover left"><a href="/posts/1e8ca1b.html" title="期望dp——用记忆化搜索"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?9963" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="期望dp——用记忆化搜索"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/1e8ca1b.html" title="期望dp——用记忆化搜索">期望dp——用记忆化搜索</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-08-06T16:00:00.000Z" title="发表于 2024-08-07 00:00:00">2024-08-07</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content">https://www.luogu.com.cn/problem/P4316  本题暂时只写了用期望dp经典套路，套上期望DP的基本套路，设dp(u)为到达u点的期望长度。 期望dp，也叫概率dp 一般来说，期望dp找到正确的状态后，转移是比较容易想到的。 但一般情况下，状态一定是“可数”的 事实上，将问题直接作为dp的状态是最好的。  如，问**“n人做XX事的期望次数”，那么不妨设计状态为f[i]表示i个人做完事的期望**。 转移一般是递推，通常分两种，一种是从上一个状态转移得（填表法），另一种是转移向下一个状态（刷表法）。 有时期望dp需以最终状态为初始状态转移，即逆推。 如f[i]表示期望还要走f[i]步到达终点。这种状态的转移是刷表法  还可以拓扑排序，直接很数学地倒着算一遍。（待完成 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667// Problem:...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/2e8656b4.html" title="倍增专题"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?5338" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="倍增专题"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/2e8656b4.html" title="倍增专题">倍增专题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-08-04T16:00:00.000Z" title="发表于 2024-08-05 00:00:00">2024-08-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content"> 倍增大专题  [AHOI2008] 紧急集合 / 聚会 - 洛谷  题意：给定一棵树，多次查询费马点（bushi 费马点的含义是：到三个点的距离之和最小  Solution:考虑画图发现树上三点两两求lca，必然至少两个相同，然后我们只需要让费马点为另一个点就可以了，因为这一段路程只需要一个点走就最好了。 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152//考虑到让一个点走多的路程，两点走短路程//首先对多种情况画图，可以知道树上三点两两求lca，必然至少两个相同vector&lt;int&gt; e[N];int fa[N],son[N],dep[N],siz[N];int top[N];void dfs1(int u,int f)&#123; //搞fa,dep,son  fa[u]=f;siz[u]=1;dep[u]=dep[f]+1;  for(int v:e[u])&#123;    if(v==f) continue;   ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/e5a7c7ec.html" title="回文自动机PAM"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?4494" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="回文自动机PAM"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/e5a7c7ec.html" title="回文自动机PAM">回文自动机PAM</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-08-03T16:00:00.000Z" title="发表于 2024-08-04 00:00:00">2024-08-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content"> 回文自动机PAM   在线数据结构「笔记」回文自动机 - Luckyblock - 博客园 (cnblogs.com)   每个状态仅代表唯一的本质不同的回文子串字符串 。s 的本质不同回文子串的数量至多只有 |s|个，则 PAM 的状态数个数是 O(n)级别的    算法原理就是增量法构建 PAM，利用前面的回文后缀，fail指针配合转移边进行维护。 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/515818b4.html" title="离散化"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?8347" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="离散化"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/515818b4.html" title="离散化">离散化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-08-02T16:00:00.000Z" title="发表于 2024-08-03 00:00:00">2024-08-03</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content">离散化是一种数据处理的技巧，本质上可以看成是一种 哈希，其保证数据在哈希以后仍然保持原来的全/偏序关系。 https://oi-wiki.org/misc/discrete/ 通俗地讲就是当有些数据因为本身很大或者类型不支持，自身无法作为数组的下标来方便地处理，而影响最终结果的只有元素之间的相对大小关系时，我们可以将原来的数据按照排名来处理问题，即离散化。 用来离散化的可以是大整数、浮点数、字符串等等。 最常见方法：排序+去重+二分 123456789101112//数据离散化_排序+去重void discrete()&#123;    sort(lan.begin(), lan.end());   //排序    lan.erase(unique(lan.begin(), lan.end()), lan.end());   //去重&#125;//查询int query(int x)&#123;    return lower_bound(lan.begin(), lan.end(), x)-lan.begin(); ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/9e993aa5.html" title="ST 表"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?4971" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ST 表"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/9e993aa5.html" title="ST 表">ST 表</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-31T16:00:00.000Z" title="发表于 2024-08-01 00:00:00">2024-08-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content"> 封装函数版本 123456789101112131415161718192021222324252627282930313233343536template &lt;typename T, class F = function&lt;T(const T&amp;, const T&amp;)&gt;&gt;struct SparseTable &#123;    int n;    vector&lt;vector&lt;T&gt;&gt; st;    F func;     SparseTable(const vector&lt;T&gt;&amp; a, const F&amp; f) : func(f) &#123;        n=(int)a.size()-1;        int max_log = __lg(n) +1;        st.resize(max_log+1);        st[0] = a;        for (int j = 1; j &lt;=max_log; j++) &#123;           ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/b614dbf4.html" title="第 132 场周赛——质数小结论，并查集配Floyd"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?3432" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="第 132 场周赛——质数小结论，并查集配Floyd"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/b614dbf4.html" title="第 132 场周赛——质数小结论，并查集配Floyd">第 132 场周赛——质数小结论，并查集配Floyd</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-31T16:00:00.000Z" title="发表于 2024-08-01 00:00:00">2024-08-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content">https://www.acwing.com/activity/content/competition/problem_list/3648/  B题收获： 1.利用题目告诉的结论：1e9范围质数之差小于300 2.一个数不被2-a的任何数整除 等价于他的最小质因子需要大于a  c题：初步宏观思路：不难想到用并查集维护类别，只需将每一个类缩成一个点，由于最多只有500个类别，跑一个floyd就可以了 部分细节处理：我的思路是类别用并查集维护，开了一个哈希表去存每个类别对应的根节点是最终floyd的第几个点，in...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/d9943f91.html" title="5157"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?3847" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="5157"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/d9943f91.html" title="5157">5157</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-24T16:00:00.000Z" title="发表于 2024-07-25 00:00:00">2024-07-25</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content">https://www.acwing.com/problem/content/5157/ 利用贡献思想入门的一道题，对于看起来复杂的问题，我们去考虑每一个元素在每一轮中的贡献，如果这道题不理解了可以去看视频讲解，里面说的非常明晰。 在本题实现过程中需要找到找到数组中的最大数，并且统计有几个同时最大的数，我的实现非常不好，用stl麻烦了，参考一下别人优雅的实现。 123456for (int i = 0; i &lt; n; i ++ ) &#123;     int t = ++ cnt[s[i]];     if (t &gt; mx) mx = t, ct = 1;     else if (t == mx) ct ++ ; &#125;  上面代码中不断维护最大值以及最大值的数的个数  1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859#include &lt;bits/stdc++.h&gt;using...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/edd265aa.html" title="Codeforces Round 923 (Div. 3)"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?3183" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round 923 (Div. 3)"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/edd265aa.html" title="Codeforces Round 923 (Div. 3)">Codeforces Round 923 (Div. 3)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-17T16:00:00.000Z" title="发表于 2024-07-18 00:00:00">2024-07-18</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content"> Codeforces Round 923 (Div. 3) F：给定一张一般图，不保证连通，定义一个简单环的权值是环中最小边的权值，求图中最小环的权值和具体由哪些点组成。  Sol：首先需要思考的是怎么求出最大权值？我们考虑用克鲁斯卡尔算法的思想对边权排序，考虑逐步加入图中，一旦合并失败就说明当前边构成了这个环的最小边，我们维护答案，同时记录左右端点。  第二阶段我们需要利用最小边的两个点把目标环的所有点找出来。我们用标记数组保证点不走回头路，用flag保证函数递归栈退出，不再执行循环。从L开始dfs，遇到R的时候就统计答案。  实现的地方还有一个困难就是对于不在环上的点可能需要加入再删除，这样比较啰嗦，提供一种jly用bool返回值的写法。当更深的递归函数返回结果时，当前的点才加入path中  12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455//为了给小的边机会，我们当然应该将边权从大到小加进图中struct...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/9be380b5.html" title="牛客小白月赛86"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?6714" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="牛客小白月赛86"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/9be380b5.html" title="牛客小白月赛86">牛客小白月赛86</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-16T16:00:00.000Z" title="发表于 2024-07-17 00:00:00">2024-07-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content"> B 水平考试 ====== 等价于两个集合 S,TS, TS,T 判断 SSS 中是否存在 TTT 中所不包含的元素。  若存在则输出 0； 否则输出 10。  时间复杂度：O(T)O(T)O(T)  C题：区间查询当前区间可以被分为多少段，要求每段只有一种数字。 做法1：提前对所有段编号，查询时直接左右边界编号相减，注意边界需要特别处理 做法2：标记第i段与第i+1段之间的分界点，然后求前缀和，本质上和做法1一样  D题：给定网格，0表示障碍，1表示道路。问有多少块长方形道路？（正方形也是长方形） 对此我们首先用过bfs找到连通块，对于每个连通块我们需要维护这个连通块最大x，y坐标， 最小x，y坐标，以及连通块大小。当连通块是矩形的时候通过 统计矩形的(minX, minY) -&gt; (maxX, maxY) 然后判断 (maxY - minY + 1) * (maxX - minX + 1) ==...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/712f0cc1.html" title="IEEE备战"><img class="post-bg" src="https://api.xsot.cn/bing?jump=true?5467" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="IEEE备战"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/712f0cc1.html" title="IEEE备战">IEEE备战</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-07-13T16:00:00.000Z" title="发表于 2024-07-14 00:00:00">2024-07-14</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/ICPC/">ICPC</a></span></div><div class="content"> IEEE评测题解链接 10.0以前提交链接：IEEE ENSIAS Student Branch (github.com) 11.0-17.0评测：https://csacademy.com/ieeextreme-practice/task/ IEEEXtreme 10.0 极限编程大赛题解 - meelo - 博客园 https://www.cnblogs.com/meelo/p/6059749.html 13.0 https://www.cnblogs.com/izcat/p/11707465.html 代码参考：https://github.com/ducthienbui97/IEEExtreme13 12.0 https://www.cnblogs.com/romaLzhih/p/9833900.html 8.0,9.0 https://www.cnblogs.com/qscqesze/p/5958824.html </div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/4/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/#content-inner">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/#content-inner">22</a><a class="extend next" rel="next" href="/page/6/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">理性思考，和平交流</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/34811d5f.html" title="贪心"><img src="https://api.xsot.cn/bing?jump=true?5256" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="贪心"/></a><div class="content"><a class="title" href="/posts/34811d5f.html" title="贪心">贪心</a><time datetime="2024-12-21T16:00:00.000Z" title="发表于 2024-12-22 00:00:00">2024-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例"><img src="https://api.xsot.cn/bing?jump=true?9826" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Z函数与扩展KMP算法详解 - 以CF126B为例"/></a><div class="content"><a class="title" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例">Z函数与扩展KMP算法详解 - 以CF126B为例</a><time datetime="2024-12-20T16:00:00.000Z" title="发表于 2024-12-21 00:00:00">2024-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)"><img src="https://api.xsot.cn/bing?jump=true?4177" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round 895 (Div. 3)"/></a><div class="content"><a class="title" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)">Codeforces Round 895 (Div. 3)</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）"><img src="https://api.xsot.cn/bing?jump=true?9167" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="可持久化字典树（Trie）"/></a><div class="content"><a class="title" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）">可持久化字典树（Trie）</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d8850d48.html" title="网格图上问题"><img src="https://api.xsot.cn/bing?jump=true?5800" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网格图上问题"/></a><div class="content"><a class="title" href="/posts/d8850d48.html" title="网格图上问题">网格图上问题</a><time datetime="2024-12-14T16:00:00.000Z" title="发表于 2024-12-15 00:00:00">2024-12-15</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/ICPC/"><span class="card-category-list-name">ICPC</span><span class="card-category-list-count">214</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/"><span class="card-category-list-name">算法</span><span class="card-category-list-count">1</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%AE%97%E6%B3%95/ICPC/"><span class="card-category-list-name">ICPC</span><span class="card-category-list-count">1</span></a></li></ul></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="font-size: 1.1em; color: #999">字符串</a> <a href="/tags/KMP/" style="font-size: 1.1em; color: #999">KMP</a> <a href="/tags/Z%E5%87%BD%E6%95%B0/" style="font-size: 1.1em; color: #999">Z函数</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      <a class="card-more-btn" href="/archives/"
+            title="查看更多">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/12/">
+            <span class="card-archive-list-date">
+              十二月 2024
+            </span>
+            <span class="card-archive-list-count">9</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/11/">
+            <span class="card-archive-list-date">
+              十一月 2024
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/10/">
+            <span class="card-archive-list-date">
+              十月 2024
+            </span>
+            <span class="card-archive-list-count">8</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/09/">
+            <span class="card-archive-list-date">
+              九月 2024
+            </span>
+            <span class="card-archive-list-count">10</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/08/">
+            <span class="card-archive-list-date">
+              八月 2024
+            </span>
+            <span class="card-archive-list-count">13</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/07/">
+            <span class="card-archive-list-date">
+              七月 2024
+            </span>
+            <span class="card-archive-list-count">10</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/06/">
+            <span class="card-archive-list-date">
+              六月 2024
+            </span>
+            <span class="card-archive-list-count">6</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/05/">
+            <span class="card-archive-list-date">
+              五月 2024
+            </span>
+            <span class="card-archive-list-count">10</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">215</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-10-22T17:46:35.331Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>window.typedJSFn = {
+  init: str => {
+    window.typed = new Typed('#subtitle', Object.assign({
+      strings: str,
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50,
+    }, null))
+  },
+  run: subtitleType => {
+    if (true) {
+      if (typeof Typed === 'function') {
+        subtitleType()
+      } else {
+        btf.getScript('https://cdn.jsdelivr.net/npm/typed.js/dist/typed.umd.min.js').then(subtitleType)
+      }
+    } else {
+      subtitleType()
+    }
+  }
+}
+btf.addGlobalFn('pjaxSendOnce', () => { typed.destroy() }, 'typedDestroy')
+</script><script>function subtitleType () {
+  if (true) {
+    typedJSFn.init(["你好，我是爱飞鱼","分享知识，探索世界","世间安得两全法，不负如来不负卿"])
+  } else {
+    document.getElementById("subtitle").textContent = "你好，我是爱飞鱼"
+  }
+}
+typedJSFn.run(subtitleType)</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

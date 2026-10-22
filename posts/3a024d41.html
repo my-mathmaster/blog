@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>树上启发式合并 | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="树上启发式合并（常常也叫DSU On Tree，但其实和DSU并没有特别大关系），是一种解决某些树上离线问题的算法，尤其常被用于解决“对每个节点，询问关于其子树的某些信息”这样的问题。  假设我们要对树上的每个节点p求ans[p] ，且这个ans[p] 可以通过合并p的子节点的某些信息得知，一般来说我们可以用树形DP解决。但如果“子节点的某些信息”的规模较大，简单的树形DP在时间和空间上都可能爆">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树上启发式合并">
+<meta property="og:url" content="https://blog.afywty.top/posts/3a024d41.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="树上启发式合并（常常也叫DSU On Tree，但其实和DSU并没有特别大关系），是一种解决某些树上离线问题的算法，尤其常被用于解决“对每个节点，询问关于其子树的某些信息”这样的问题。  假设我们要对树上的每个节点p求ans[p] ，且这个ans[p] 可以通过合并p的子节点的某些信息得知，一般来说我们可以用树形DP解决。但如果“子节点的某些信息”的规模较大，简单的树形DP在时间和空间上都可能爆">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://api.xsot.cn/bing?jump=true?419">
+<meta property="article:published_time" content="2023-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T17:46:12.472Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="算法 数学 技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://api.xsot.cn/bing?jump=true?419"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "树上启发式合并",
+  "url": "https://blog.afywty.top/posts/3a024d41.html",
+  "image": "https://api.xsot.cn/bing?jump=true?419",
+  "datePublished": "2023-04-14T16:00:00.000Z",
+  "dateModified": "2026-10-22T17:46:12.472Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/3a024d41.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '树上启发式合并',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/head.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://api.xsot.cn/bing?jump=true?419);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">树上启发式合并</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">树上启发式合并</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-14T16:00:00.000Z" title="发表于 2023-04-15 00:00:00">2023-04-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T17:46:12.472Z" title="更新于 2026-10-23 01:46:12">2026-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ICPC/">ICPC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-10-23 01:46:12&quot;}" hidden></div><h1 id="树上启发式合并常常也叫dsu-on-tree但其实和dsu并没有特别大关系是一种解决某些树上离线问题的算法尤其常被用于解决对每个节点询问关于其子树的某些信息这样的问题"><a class="markdownIt-Anchor" href="#树上启发式合并常常也叫dsu-on-tree但其实和dsu并没有特别大关系是一种解决某些树上离线问题的算法尤其常被用于解决对每个节点询问关于其子树的某些信息这样的问题"></a> 树上启发式合并（常常也叫DSU On Tree，但其实和DSU并没有特别大关系），是一种解决某些树上离线问题的算法，尤其常被用于解决“对每个节点，询问关于其子树的某些信息”这样的问题。</h1>
+<ul>
+<li>假设我们要对树上的每个节点p求ans[p] ，且这个ans[p] 可以通过合并p的子节点的某些信息得知，一般来说我们可以用树形DP解决。但如果“子节点的某些信息”的规模较大，简单的树形DP在时间和空间上都可能爆炸。所以我们不能存储每个节点的信息，而是要实现某种资源复用。</li>
+</ul>
+<h1 id="-有一棵-n-个结点的以-1-号结点为根的有根树"><a class="markdownIt-Anchor" href="#-有一棵-n-个结点的以-1-号结点为根的有根树"></a> - 有一棵  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span> 个结点的以  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 号结点为根的<strong>有根树</strong>。</h1>
+<ul>
+<li>每个结点都有一个颜色，颜色是以编号表示的， <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathnormal">i</span></span></span></span> 号结点的颜色编号为  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">c_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.58056em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。</li>
+<li>如果一种颜色在以  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> 为根的子树内出现次数最多，称其在以  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span> 为根的子树中占<strong>主导地位</strong>。显然，同一子树中可能有多种颜色占主导地位。</li>
+<li>你的任务是对于每一个  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">i\in[1,n]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69862em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span>，求出以  <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathnormal">i</span></span></span></span> 为根的子树中，占主导地位的颜色的编号和。</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>1</mn><msup><mn>0</mn><mn>5</mn></msup><mo separator="true">,</mo><msub><mi>c</mi><mi>i</mi></msub><mo>≤</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n\le 10^5,c_i\le n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719400000000001em;vertical-align:-0.13597em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.008548em;vertical-align:-0.19444em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span></li>
+</ul>
+<h1 id="时间复杂度onlogn"><a class="markdownIt-Anchor" href="#时间复杂度onlogn"></a> 时间复杂度O（nlogn)</h1>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">int read()&#123;</span><br><span class="line">  char c=getchar(); int x=0,f=1;</span><br><span class="line">  while(c&lt;&#x27;0&#x27;||c&gt;&#x27;9&#x27;)&#123;if(c==&#x27;-&#x27;)f=-1;c=getchar();&#125;</span><br><span class="line">  while(c&gt;=&#x27;0&#x27;&amp;&amp;c&lt;=&#x27;9&#x27;) x=x*10+c-&#x27;0&#x27;,c=getchar();</span><br><span class="line">  return x*f;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const int N=1e5+10;</span><br><span class="line">// col[x]:节点的颜色编号, son[x]:重儿子, </span><br><span class="line">// cnt[i]:颜色编号i的数量</span><br><span class="line">int n,col[N],siz[N],son[N],cnt[N],mx;</span><br><span class="line">LL sum,ans[N];</span><br><span class="line">vector&lt;int&gt; e[N];</span><br><span class="line"></span><br><span class="line">void dfs1(int x,int fa)&#123; //重链剖分</span><br><span class="line">  siz[x]=1;</span><br><span class="line">  for(int y : e[x])&#123;</span><br><span class="line">    if(y==fa) continue;</span><br><span class="line">    dfs1(y,x);</span><br><span class="line">    siz[x]+=siz[y];</span><br><span class="line">    if(siz[y]&gt;siz[son[x]]) son[x]=y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">void add(int x,int fa,int son)&#123;</span><br><span class="line">  cnt[col[x]]++;</span><br><span class="line">  if(cnt[col[x]]&gt;mx) mx=cnt[col[x]],sum=col[x];</span><br><span class="line">  else if(cnt[col[x]]==mx) sum+=col[x];</span><br><span class="line">  </span><br><span class="line">  for(int y : e[x]) //重子树除外</span><br><span class="line">    if(y!=fa &amp;&amp; y!=son) add(y,x,son);</span><br><span class="line">&#125;</span><br><span class="line">void sub(int x,int fa)&#123;</span><br><span class="line">  cnt[col[x]]--;</span><br><span class="line">  for(int y : e[x])</span><br><span class="line">    if(y!=fa) sub(y,x);</span><br><span class="line">&#125;</span><br><span class="line">void dfs2(int x, int fa, int opt)&#123;</span><br><span class="line">  for(int y : e[x]) //先搜轻儿子</span><br><span class="line">    if(y!=fa &amp;&amp; y!=son[x]) dfs2(y,x,0);</span><br><span class="line">  if(son[x]) dfs2(son[x],x,1); //后搜重儿子</span><br><span class="line">  </span><br><span class="line">  add(x,fa,son[x]); //累加x和轻子树贡献</span><br><span class="line">  ans[x]=sum;       //存储答案</span><br><span class="line">  if(!opt)sub(x,fa),sum=mx=0; //减掉轻子树贡献</span><br><span class="line">&#125;</span><br><span class="line">int main()&#123;</span><br><span class="line">  n=read();</span><br><span class="line">  for(int i=1; i&lt;=n; i++) col[i]=read();</span><br><span class="line">  for(int i=1; i&lt;=n-1; i++)&#123;</span><br><span class="line">    int x=read(),y=read();</span><br><span class="line">    e[x].push_back(y); e[y].push_back(x);</span><br><span class="line">  &#125;</span><br><span class="line">  dfs1(1,0);</span><br><span class="line">  dfs2(1,0,0);</span><br><span class="line">  for(int i=1; i&lt;=n; i++) printf(&quot;%lld &quot;,ans[i]);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/3a024d41.html">https://blog.afywty.top/posts/3a024d41.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://api.xsot.cn/bing?jump=true?419" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/c4b70c65.html" title="二分图最大权完美匹配"><img class="cover" src="https://api.xsot.cn/bing?jump=true?323" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">二分图最大权完美匹配</div></div><div class="info-2"><div class="info-item-1">#时间复杂度为Θ(n^3) 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495const int inf =0x3f3f3f3f;const int N=505;long long w[N][N];long long la[N],lb[N];bool va[N],vb[N];long long match[N];long long n,m,upd[N];long long last[N];bool dfs(int x,int fa)&#123;    va[x]=1;    for(int y = 1; y&lt;=n; y++)    &#123;        if(!vb[y])        &#123;           ...</div></div></div></a><a class="pagination-related" href="/posts/53d40c3a.html" title="树的中心——树形dp_换根dp启蒙"><img class="cover" src="https://api.xsot.cn/bing?jump=true?9123" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">树的中心——树形dp_换根dp启蒙</div></div><div class="info-2"><div class="info-item-1"> 请你在树中找到一个点，使得该点到树中其他结点的最远距离最近。这个点被称为树的中心。 题解：https://www.cnblogs.com/dx123/p/17302104.html 评测：https://www.acwing.com/problem/content/1075/ 暴力做法是以每个点为根，求出从根向下走的最远距离，这个过程需要做n遍，每一遍dfs的复杂度是O（n),时间复杂度是O（n^2),考虑优化。 https://oi-wiki.org/dp/tree/#换根-dp  树形 DP 中的换根 DP 问题又被称为二次扫描，通常不会指定根结点，并且根结点的变化会对一些值，例如子结点深度和、点权和等产生影响。 通常需要两次 DFS，第一次 DFS 预处理诸如深度，点权和之类的信息，在第二次 DFS 开始运行换根动态规划。  算法讲解： 第一次dfs和求树的直径的时候一样，通过递归从下而上得到从...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">理性思考，和平交流</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%91%E4%B8%8A%E5%90%AF%E5%8F%91%E5%BC%8F%E5%90%88%E5%B9%B6%E5%B8%B8%E5%B8%B8%E4%B9%9F%E5%8F%ABdsu-on-tree%E4%BD%86%E5%85%B6%E5%AE%9E%E5%92%8Cdsu%E5%B9%B6%E6%B2%A1%E6%9C%89%E7%89%B9%E5%88%AB%E5%A4%A7%E5%85%B3%E7%B3%BB%E6%98%AF%E4%B8%80%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%9F%90%E4%BA%9B%E6%A0%91%E4%B8%8A%E7%A6%BB%E7%BA%BF%E9%97%AE%E9%A2%98%E7%9A%84%E7%AE%97%E6%B3%95%E5%B0%A4%E5%85%B6%E5%B8%B8%E8%A2%AB%E7%94%A8%E4%BA%8E%E8%A7%A3%E5%86%B3%E5%AF%B9%E6%AF%8F%E4%B8%AA%E8%8A%82%E7%82%B9%E8%AF%A2%E9%97%AE%E5%85%B3%E4%BA%8E%E5%85%B6%E5%AD%90%E6%A0%91%E7%9A%84%E6%9F%90%E4%BA%9B%E4%BF%A1%E6%81%AF%E8%BF%99%E6%A0%B7%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text"> 树上启发式合并（常常也叫DSU On Tree，但其实和DSU并没有特别大关系），是一种解决某些树上离线问题的算法，尤其常被用于解决“对每个节点，询问关于其子树的某些信息”这样的问题。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-%E6%9C%89%E4%B8%80%E6%A3%B5-n-%E4%B8%AA%E7%BB%93%E7%82%B9%E7%9A%84%E4%BB%A5-1-%E5%8F%B7%E7%BB%93%E7%82%B9%E4%B8%BA%E6%A0%B9%E7%9A%84%E6%9C%89%E6%A0%B9%E6%A0%91"><span class="toc-number">2.</span> <span class="toc-text"> - 有一棵  nnn 个结点的以  111 号结点为根的有根树。</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6onlogn"><span class="toc-number">3.</span> <span class="toc-text"> 时间复杂度O（nlogn)</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/34811d5f.html" title="贪心"><img src="https://api.xsot.cn/bing?jump=true?5256" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="贪心"/></a><div class="content"><a class="title" href="/posts/34811d5f.html" title="贪心">贪心</a><time datetime="2024-12-21T16:00:00.000Z" title="发表于 2024-12-22 00:00:00">2024-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例"><img src="https://api.xsot.cn/bing?jump=true?9826" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Z函数与扩展KMP算法详解 - 以CF126B为例"/></a><div class="content"><a class="title" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例">Z函数与扩展KMP算法详解 - 以CF126B为例</a><time datetime="2024-12-20T16:00:00.000Z" title="发表于 2024-12-21 00:00:00">2024-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)"><img src="https://api.xsot.cn/bing?jump=true?4177" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round 895 (Div. 3)"/></a><div class="content"><a class="title" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)">Codeforces Round 895 (Div. 3)</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）"><img src="https://api.xsot.cn/bing?jump=true?9167" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="可持久化字典树（Trie）"/></a><div class="content"><a class="title" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）">可持久化字典树（Trie）</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d8850d48.html" title="网格图上问题"><img src="https://api.xsot.cn/bing?jump=true?5800" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网格图上问题"/></a><div class="content"><a class="title" href="/posts/d8850d48.html" title="网格图上问题">网格图上问题</a><time datetime="2024-12-14T16:00:00.000Z" title="发表于 2024-12-15 00:00:00">2024-12-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

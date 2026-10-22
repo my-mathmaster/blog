@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数 | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="两个正整数a，b，请问a∗b有哪些因子 #1≤a,b≤1e9  求因子的数量并给出所有因子  本题无脑的暴力显然不能过，但用set存数，加上考虑到a*b的所有约数其实就是a的所有约数和b的所有约数分别相乘(核心）  补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础  https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_40438165&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数">
+<meta property="og:url" content="https://blog.afywty.top/posts/a4a5fc65.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="两个正整数a，b，请问a∗b有哪些因子 #1≤a,b≤1e9  求因子的数量并给出所有因子  本题无脑的暴力显然不能过，但用set存数，加上考虑到a*b的所有约数其实就是a的所有约数和b的所有约数分别相乘(核心）  补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础  https:&#x2F;&#x2F;blog.csdn.net&#x2F;qq_40438165&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://api.xsot.cn/bing?jump=true?3652">
+<meta property="article:published_time" content="2024-08-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T17:46:12.464Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="算法 数学 技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://api.xsot.cn/bing?jump=true?3652"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数",
+  "url": "https://blog.afywty.top/posts/a4a5fc65.html",
+  "image": "https://api.xsot.cn/bing?jump=true?3652",
+  "datePublished": "2024-08-17T16:00:00.000Z",
+  "dateModified": "2026-10-22T17:46:12.464Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/a4a5fc65.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/head.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://api.xsot.cn/bing?jump=true?3652);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-08-17T16:00:00.000Z" title="发表于 2024-08-18 00:00:00">2024-08-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T17:46:12.464Z" title="更新于 2026-10-23 01:46:12">2026-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ICPC/">ICPC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-10-23 01:46:12&quot;}" hidden></div><h1 id="两个正整数ab请问ab有哪些因子"><a class="markdownIt-Anchor" href="#两个正整数ab请问ab有哪些因子"></a> 两个正整数a，b，请问a∗b有哪些因子</h1>
+<p>#1≤a,b≤1e9</p>
+<h1 id="求因子的数量并给出所有因子"><a class="markdownIt-Anchor" href="#求因子的数量并给出所有因子"></a> 求因子的数量并给出所有因子</h1>
+<h3 id="本题无脑的暴力显然不能过但用set存数加上考虑到ab的所有约数其实就是a的所有约数和b的所有约数分别相乘核心"><a class="markdownIt-Anchor" href="#本题无脑的暴力显然不能过但用set存数加上考虑到ab的所有约数其实就是a的所有约数和b的所有约数分别相乘核心"></a> 本题无脑的暴力显然不能过，但用set存数，加上考虑到a*b的所有约数其实就是a的所有约数和b的所有约数分别相乘(核心）</h3>
+<h1 id="补充常识int范围内数的约数个数最多为16002e9数的约数个数最多为1536这也是本题能这样暴力的基础"><a class="markdownIt-Anchor" href="#补充常识int范围内数的约数个数最多为16002e9数的约数个数最多为1536这也是本题能这样暴力的基础"></a> 补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础</h1>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40438165/article/details/122030763">https://blog.csdn.net/qq_40438165/article/details/122030763</a></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"># define int long long</span><br><span class="line"></span><br><span class="line">const int N = 1e5 + 10;</span><br><span class="line">const int M = 2e5 + 10;</span><br><span class="line">const int inf = 0x3f3f3f3f;</span><br><span class="line">const int mod = 998244353;</span><br><span class="line"></span><br><span class="line">int n, m;</span><br><span class="line"></span><br><span class="line">set&lt;int&gt; yueshu(int x) &#123;</span><br><span class="line">    set&lt;int&gt; st;</span><br><span class="line">    for (int i = 1; i * i &lt;= x; i++) &#123;</span><br><span class="line">        if (x % i == 0)&#123;//这个大括号很重要，我debug的一个多小时的罪魁祸首</span><br><span class="line">            st.insert(i);</span><br><span class="line">        if (i * i != x)</span><br><span class="line">            st.insert(x / i);&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return st;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main() &#123;</span><br><span class="line">    cin.tie(0);</span><br><span class="line">    cout.tie(0);</span><br><span class="line">    ios::sync_with_stdio(false);</span><br><span class="line"></span><br><span class="line">    int t;</span><br><span class="line">    t = 1;</span><br><span class="line">    //cin&gt;&gt;t;</span><br><span class="line">    while (t--) &#123;</span><br><span class="line">        int a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">        set&lt;int&gt; s1, s2, ans;</span><br><span class="line">        s1 = yueshu(a);</span><br><span class="line">        s2 = yueshu(b);</span><br><span class="line">        for (auto x : s1) &#123;</span><br><span class="line">            for (auto y : s2) &#123;</span><br><span class="line">                ans.insert(x * y);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; ans.size() &lt;&lt; endl;</span><br><span class="line">        for (auto x : ans)</span><br><span class="line">            cout &lt;&lt; x &lt;&lt; &quot; &quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但上面这种解法显然无法解决多个数的相乘的所有约数，考虑推广问题并给出dfs解法<br />
+<a target="_blank" rel="noopener" href="https://ac.nowcoder.com/acm/contest/view-submission?submissionId=62967953%EF%BC%88%E5%88%AB%E4%BA%BA%E7%94%A8lamda%E5%87%BD%E6%95%B0%E7%9A%84%E8%A7%A3%E6%B3%95%EF%BC%8C%E6%9C%89%E5%BE%85%E5%AD%A6%E4%B9%A0%EF%BC%89">https://ac.nowcoder.com/acm/contest/view-submission?submissionId=62967953（别人用lamda函数的解法，有待学习）</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"># define int long long</span><br><span class="line">typedef pair&lt;int,int&gt;pii;</span><br><span class="line">const int N = 1e5 + 10;</span><br><span class="line">const int M = 2e5 + 10;</span><br><span class="line">const int inf = 0x3f3f3f3f;</span><br><span class="line">const int mod = 998244353;</span><br><span class="line"></span><br><span class="line">int n, m;</span><br><span class="line">map&lt;int ,int&gt;mp;</span><br><span class="line"></span><br><span class="line">vector&lt;int&gt;ans;</span><br><span class="line">void dfs(int u,int s,vector&lt;pii&gt;&amp;res)&#123;</span><br><span class="line">if(u==res.size())</span><br><span class="line">&#123;</span><br><span class="line">   // cout&lt;&lt;u&lt;&lt;&quot; &quot;&lt;&lt;v.size()&lt;&lt;endl;</span><br><span class="line">    ans.push_back(s);</span><br><span class="line">    return ;</span><br><span class="line">&#125;</span><br><span class="line">for(int j=0;j&lt;=res[u].second;j++)&#123;</span><br><span class="line">    dfs(u+1,s,res);</span><br><span class="line">   // cout&lt;&lt;u&lt;&lt;&quot; &quot;&lt;&lt;j&lt;&lt;&quot; &quot;&lt;&lt;s&lt;&lt;endl;</span><br><span class="line">    s*=res[u].first;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main() &#123;</span><br><span class="line">    cin.tie(0);</span><br><span class="line">    cout.tie(0);</span><br><span class="line">    ios::sync_with_stdio(false);</span><br><span class="line"></span><br><span class="line">    int t;</span><br><span class="line">    t = 1;</span><br><span class="line"></span><br><span class="line">    while (t--) &#123;</span><br><span class="line">        int a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">       for(int i=2;i*i&lt;=a;i++)&#123;</span><br><span class="line">        if(a%i==0)&#123;</span><br><span class="line">           while(a%i==0)&#123;</span><br><span class="line">            mp[i]++;</span><br><span class="line">            a/=i;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(a&gt;1)mp[a]++;</span><br><span class="line">        for(int i=2;i*i&lt;=b;i++)&#123;</span><br><span class="line">        if(b%i==0)&#123;</span><br><span class="line">           while(b%i==0)&#123;</span><br><span class="line">            mp[i]++;</span><br><span class="line">            b/=i;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(b&gt;1)mp[b]++;</span><br><span class="line">  /*for (auto it = mp.begin(); it != mp.end(); ++it) &#123;</span><br><span class="line">    v.push_back(*it);</span><br><span class="line">&#125;*/</span><br><span class="line"> vector&lt;pii&gt;v(mp.begin(),mp.end());</span><br><span class="line">       dfs(0,1,v);</span><br><span class="line">       //for(auto[x,y]:v)cout&lt;&lt;x&lt;&lt;&quot; &quot;&lt;&lt;y&lt;&lt;endl;</span><br><span class="line">       cout&lt;&lt;ans.size()&lt;&lt;endl;</span><br><span class="line">       sort(ans.begin(),ans.end());</span><br><span class="line">       for(auto x:ans)&#123;</span><br><span class="line">        cout&lt;&lt;x&lt;&lt;&quot; &quot;;</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/a4a5fc65.html">https://blog.afywty.top/posts/a4a5fc65.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://api.xsot.cn/bing?jump=true?3652" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/84aa39e5.html" title="启发式分治"><img class="cover" src="https://api.xsot.cn/bing?jump=true?3578" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">启发式分治</div></div><div class="info-2"><div class="info-item-1"> 启发式分治 Non-boring sequences - UVALive 6258 - Virtual Judge (vjudge.net) 启发式分治-CSDN博客 [学习笔记]启发式分治 - house_cat - 博客园 (cnblogs.com) </div></div></div></a><a class="pagination-related" href="/posts/fb088f6a.html" title="一些常用到的有用知识"><img class="cover" src="https://api.xsot.cn/bing?jump=true?343" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">一些常用到的有用知识</div></div><div class="info-2"><div class="info-item-1">  log(2,1000000)=19.931568569324174087221916576936341055188988358147483672328538374…   1MB = 1024KB 1KB = 1024B 1B(byte,字节)=8b(bit,比特).   1e6(1000000)(一百万）里有78498个质数   </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">理性思考，和平交流</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E6%AD%A3%E6%95%B4%E6%95%B0ab%E8%AF%B7%E9%97%AEab%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9B%A0%E5%AD%90"><span class="toc-number">1.</span> <span class="toc-text"> 两个正整数a，b，请问a∗b有哪些因子</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B1%82%E5%9B%A0%E5%AD%90%E7%9A%84%E6%95%B0%E9%87%8F%E5%B9%B6%E7%BB%99%E5%87%BA%E6%89%80%E6%9C%89%E5%9B%A0%E5%AD%90"><span class="toc-number">2.</span> <span class="toc-text"> 求因子的数量并给出所有因子</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E9%A2%98%E6%97%A0%E8%84%91%E7%9A%84%E6%9A%B4%E5%8A%9B%E6%98%BE%E7%84%B6%E4%B8%8D%E8%83%BD%E8%BF%87%E4%BD%86%E7%94%A8set%E5%AD%98%E6%95%B0%E5%8A%A0%E4%B8%8A%E8%80%83%E8%99%91%E5%88%B0ab%E7%9A%84%E6%89%80%E6%9C%89%E7%BA%A6%E6%95%B0%E5%85%B6%E5%AE%9E%E5%B0%B1%E6%98%AFa%E7%9A%84%E6%89%80%E6%9C%89%E7%BA%A6%E6%95%B0%E5%92%8Cb%E7%9A%84%E6%89%80%E6%9C%89%E7%BA%A6%E6%95%B0%E5%88%86%E5%88%AB%E7%9B%B8%E4%B9%98%E6%A0%B8%E5%BF%83"><span class="toc-number">2.0.1.</span> <span class="toc-text"> 本题无脑的暴力显然不能过，但用set存数，加上考虑到a*b的所有约数其实就是a的所有约数和b的所有约数分别相乘(核心）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%E5%B8%B8%E8%AF%86int%E8%8C%83%E5%9B%B4%E5%86%85%E6%95%B0%E7%9A%84%E7%BA%A6%E6%95%B0%E4%B8%AA%E6%95%B0%E6%9C%80%E5%A4%9A%E4%B8%BA16002e9%E6%95%B0%E7%9A%84%E7%BA%A6%E6%95%B0%E4%B8%AA%E6%95%B0%E6%9C%80%E5%A4%9A%E4%B8%BA1536%E8%BF%99%E4%B9%9F%E6%98%AF%E6%9C%AC%E9%A2%98%E8%83%BD%E8%BF%99%E6%A0%B7%E6%9A%B4%E5%8A%9B%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="toc-number">3.</span> <span class="toc-text"> 补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/34811d5f.html" title="贪心"><img src="https://api.xsot.cn/bing?jump=true?5256" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="贪心"/></a><div class="content"><a class="title" href="/posts/34811d5f.html" title="贪心">贪心</a><time datetime="2024-12-21T16:00:00.000Z" title="发表于 2024-12-22 00:00:00">2024-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例"><img src="https://api.xsot.cn/bing?jump=true?9826" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Z函数与扩展KMP算法详解 - 以CF126B为例"/></a><div class="content"><a class="title" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例">Z函数与扩展KMP算法详解 - 以CF126B为例</a><time datetime="2024-12-20T16:00:00.000Z" title="发表于 2024-12-21 00:00:00">2024-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)"><img src="https://api.xsot.cn/bing?jump=true?4177" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round 895 (Div. 3)"/></a><div class="content"><a class="title" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)">Codeforces Round 895 (Div. 3)</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）"><img src="https://api.xsot.cn/bing?jump=true?9167" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="可持久化字典树（Trie）"/></a><div class="content"><a class="title" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）">可持久化字典树（Trie）</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d8850d48.html" title="网格图上问题"><img src="https://api.xsot.cn/bing?jump=true?5800" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网格图上问题"/></a><div class="content"><a class="title" href="/posts/d8850d48.html" title="网格图上问题">网格图上问题</a><time datetime="2024-12-14T16:00:00.000Z" title="发表于 2024-12-15 00:00:00">2024-12-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

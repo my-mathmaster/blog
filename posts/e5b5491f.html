@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>维护集合最值和集合全体加 | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="维护集合最值和集合全体加 你有一个可重集合初始有n个数，有4种操作，5e5次操作5e5次操作5e5次操作  向集合中加入一个数 删除集合中一个数 集合中所有数加x 查询集合最大值  进一步考虑另一个可以使用这个模型的问题。一个vector，动态在尾部增加数，删除数，边操作边求后缀和最小值 1234567891011121314151617181920212223242526272829303132">
+<meta property="og:type" content="article">
+<meta property="og:title" content="维护集合最值和集合全体加">
+<meta property="og:url" content="https://blog.afywty.top/posts/e5b5491f.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="维护集合最值和集合全体加 你有一个可重集合初始有n个数，有4种操作，5e5次操作5e5次操作5e5次操作  向集合中加入一个数 删除集合中一个数 集合中所有数加x 查询集合最大值  进一步考虑另一个可以使用这个模型的问题。一个vector，动态在尾部增加数，删除数，边操作边求后缀和最小值 1234567891011121314151617181920212223242526272829303132">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://api.xsot.cn/bing?jump=true?7493">
+<meta property="article:published_time" content="2024-02-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T17:46:12.474Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="算法 数学 技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://api.xsot.cn/bing?jump=true?7493"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "维护集合最值和集合全体加",
+  "url": "https://blog.afywty.top/posts/e5b5491f.html",
+  "image": "https://api.xsot.cn/bing?jump=true?7493",
+  "datePublished": "2024-02-09T16:00:00.000Z",
+  "dateModified": "2026-10-22T17:46:12.474Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/e5b5491f.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '维护集合最值和集合全体加',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/head.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://api.xsot.cn/bing?jump=true?7493);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">维护集合最值和集合全体加</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">维护集合最值和集合全体加</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-02-09T16:00:00.000Z" title="发表于 2024-02-10 00:00:00">2024-02-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T17:46:12.474Z" title="更新于 2026-10-23 01:46:12">2026-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ICPC/">ICPC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-10-23 01:46:12&quot;}" hidden></div><p>维护集合最值和集合全体加</p>
+<p>你有一个可重集合初始有n个数，有4种操作，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn><mi>e</mi><mn>5</mn><mtext>次操作</mtext></mrow><annotation encoding="application/x-tex">5e5次操作</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">5</span><span class="mord mathnormal">e</span><span class="mord">5</span><span class="mord cjk_fallback">次</span><span class="mord cjk_fallback">操</span><span class="mord cjk_fallback">作</span></span></span></span></p>
+<ul>
+<li>向集合中加入一个数</li>
+<li>删除集合中一个数</li>
+<li>集合中所有数加x</li>
+<li>查询集合最大值</li>
+</ul>
+<p>进一步考虑另一个可以使用这个模型的问题。一个vector，动态在尾部增加数，删除数，边操作边求后缀和最小值</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> LOCAL</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;debug.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> deb(...)</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ll long long</span></span><br><span class="line"><span class="comment">// #define int long long</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> ull unsigned long long</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> pii pair<span class="string">&lt;int, int&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> db double</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> baoliu(x, y) cout &lt;&lt; fixed &lt;&lt; setprecision(y) &lt;&lt; x</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> endl <span class="string">&quot;\n&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> alls(x) (x).begin(), (x).end()</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> fs first</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> sec second</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> bug(x) cerr &lt;&lt; #x &lt;&lt; <span class="string">&quot; = &quot;</span> &lt;&lt; x &lt;&lt; endl</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> N = <span class="number">2e5</span> + <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> M = <span class="number">1e6</span> + <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> inf = <span class="number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> mod = <span class="number">998244353</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> eps = <span class="number">1e-8</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">double</span> PI = <span class="built_in">acos</span>(<span class="number">-1.0</span>);</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">solve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">a</span><span class="params">(n + <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">suf</span><span class="params">(n + <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) cin &gt;&gt; a[i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; i--) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i == n)</span><br><span class="line">            suf[i] = a[i];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            suf[i] = suf[i + <span class="number">1</span>] + a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    multiset&lt;<span class="type">int</span>&gt; st;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; i++) st.<span class="built_in">insert</span>(suf[i]);</span><br><span class="line">    <span class="type">int</span> offset = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> sufsum = suf[<span class="number">1</span>];</span><br><span class="line">    <span class="comment">// 集合所有数加上x</span></span><br><span class="line">    <span class="keyword">auto</span> update = [&amp;](<span class="type">int</span> x) &#123;</span><br><span class="line">        offset += x;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 1-加入一个数到集合</span></span><br><span class="line">    <span class="keyword">auto</span> add = [&amp;](<span class="type">int</span> x) &#123;</span><br><span class="line">        st.<span class="built_in">insert</span>(x - offset);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 2-删除集合里的数，保证存在</span></span><br><span class="line">    <span class="keyword">auto</span> del = [&amp;](<span class="type">int</span> x) &#123;</span><br><span class="line">        <span class="type">int</span> cur = x - offset;</span><br><span class="line">        <span class="built_in">assert</span>(st.<span class="built_in">find</span>(cur) != st.<span class="built_in">end</span>());</span><br><span class="line">        st.<span class="built_in">erase</span>(st.<span class="built_in">find</span>(cur));</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 3-查询后缀和最大值</span></span><br><span class="line">    <span class="keyword">auto</span> query = [&amp;] &#123;</span><br><span class="line">        <span class="keyword">return</span> *<span class="built_in">prev</span>(st.<span class="built_in">end</span>()) + offset;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="type">int</span> m;</span><br><span class="line">    cin &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= m; i++) &#123;</span><br><span class="line">        <span class="type">int</span> op;</span><br><span class="line">        cin &gt;&gt; op;</span><br><span class="line">        <span class="keyword">if</span> (op == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="type">int</span> x;</span><br><span class="line">            cin &gt;&gt; x;</span><br><span class="line">            sufsum += x;</span><br><span class="line">            a.<span class="built_in">push_back</span>(x);</span><br><span class="line">            <span class="built_in">update</span>(x);</span><br><span class="line">            <span class="built_in">add</span>(sufsum);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="type">int</span> x = a.<span class="built_in">back</span>();</span><br><span class="line">            a.<span class="built_in">pop_back</span>();</span><br><span class="line">            <span class="built_in">del</span>(sufsum);</span><br><span class="line">            sufsum -= x;</span><br><span class="line">            <span class="built_in">update</span>(-x);</span><br><span class="line">        &#125; <span class="keyword">else</span></span><br><span class="line">            cout &lt;&lt; <span class="built_in">query</span>() &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">signed</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin.<span class="built_in">tie</span>(<span class="number">0</span>);</span><br><span class="line">    ios::<span class="built_in">sync_with_stdio</span>(<span class="literal">false</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> LOCAL</span></span><br><span class="line">    <span class="type">double</span> starttime = <span class="built_in">clock</span>();</span><br><span class="line">    <span class="comment">// freopen(&quot;in.txt&quot;, &quot;r&quot;, stdin);</span></span><br><span class="line">    <span class="comment">// freopen(&quot;out.txt&quot;, &quot;w&quot;, stdout);</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="type">int</span> t = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// cin &gt;&gt; t;</span></span><br><span class="line">    <span class="keyword">while</span> (t--) <span class="built_in">solve</span>();</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> LOCAL</span></span><br><span class="line">    <span class="type">double</span> endtime = <span class="built_in">clock</span>();</span><br><span class="line">    cerr &lt;&lt; <span class="string">&quot;Time Used: &quot;</span> &lt;&lt; (<span class="type">double</span>)(endtime - starttime) / CLOCKS_PER_SEC * <span class="number">1000</span> &lt;&lt; <span class="string">&quot; ms&quot;</span> &lt;&lt; endl;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>怎么转化的？</p>
+<p>假设初始有n个元素 我就把n个后缀和存进集合里。需要维护如下操作：</p>
+<ul>
+<li>
+<p>集合删去一个数，并且集合中每个数减去这个数</p>
+</li>
+<li>
+<p>集合加入一个数，并且集合中每个数加上这个数</p>
+</li>
+<li>
+<p>求集合最小值</p>
+<p>开一个vector按照题意模拟就可以知道每次最后一个数是谁，维护一个sufsum就可以知道当前后缀和是多少，用multiset就可以知道集合最小值。</p>
+<ul>
+<li>唯一要解决的问题就是集合一起加一个数怎么维护</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/e5b5491f.html">https://blog.afywty.top/posts/e5b5491f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="https://api.xsot.cn/bing?jump=true?7493" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6dd452c6.html" title="bitset应用"><img class="cover" src="https://api.xsot.cn/bing?jump=true?5134" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">bitset应用</div></div><div class="info-2"><div class="info-item-1"> bitset  bitset前身：普通状态压缩的优化  以cf937G为例,对于邻接矩阵的由二维压缩到一维 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354#include &lt;bits/stdc++.h&gt;using i64 = long long;void solve() &#123;    int n;    std::cin &gt;&gt; n;        std::vector&lt;std::string&gt; g(n), w(n);    for (int i = 0; i &lt; n; i++) &#123;        std::cin &gt;&gt; g[i] &gt;&gt; w[i];    &#125;        std::vector&lt;int&gt; e(n);    for (int i = 0; i &lt; n; i++) &#123;        for...</div></div></div></a><a class="pagination-related" href="/posts/c487264e.html" title="关于char数组的字符串"><img class="cover" src="https://api.xsot.cn/bing?jump=true?5069" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">关于char数组的字符串</div></div><div class="info-2"><div class="info-item-1">在 C/C++ 中，‘\0’ 和 0 是等价的。它们都表示数值零。 ‘\0’ 是一个字符常量，表示 ASCII 值为零的空字符（null character）。在字符串中，‘\0’ 用作字符串的结束标志。 而 0 是整数常量，表示数值零。在 C/C++ 中，字符类型可以看作是整数类型的一种特殊形式，因此 ‘\0’ 可以被视为整数常量 0。  下面展示一个字符数组遍历的例子  123456789void insert(char *s)&#123;  int p=0;  for(int i=0; s[i]; i ++)&#123;    int j=s[i]-&#x27;a&#x27;;//字母映射    if(!ch[p][j])ch[p][j]=++idx;    p=ch[p][j];  &#125;  cnt[p]++;//插入次数&#125;</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">理性思考，和平交流</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">215</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="/1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/34811d5f.html" title="贪心"><img src="https://api.xsot.cn/bing?jump=true?5256" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="贪心"/></a><div class="content"><a class="title" href="/posts/34811d5f.html" title="贪心">贪心</a><time datetime="2024-12-21T16:00:00.000Z" title="发表于 2024-12-22 00:00:00">2024-12-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例"><img src="https://api.xsot.cn/bing?jump=true?9826" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Z函数与扩展KMP算法详解 - 以CF126B为例"/></a><div class="content"><a class="title" href="/posts/dc9ce3fc.html" title="Z函数与扩展KMP算法详解 - 以CF126B为例">Z函数与扩展KMP算法详解 - 以CF126B为例</a><time datetime="2024-12-20T16:00:00.000Z" title="发表于 2024-12-21 00:00:00">2024-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)"><img src="https://api.xsot.cn/bing?jump=true?4177" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Codeforces Round 895 (Div. 3)"/></a><div class="content"><a class="title" href="/posts/5848dec6.html" title="Codeforces Round 895 (Div. 3)">Codeforces Round 895 (Div. 3)</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）"><img src="https://api.xsot.cn/bing?jump=true?9167" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="可持久化字典树（Trie）"/></a><div class="content"><a class="title" href="/posts/493cf1a5.html" title="可持久化字典树（Trie）">可持久化字典树（Trie）</a><time datetime="2024-12-15T16:00:00.000Z" title="发表于 2024-12-16 00:00:00">2024-12-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d8850d48.html" title="网格图上问题"><img src="https://api.xsot.cn/bing?jump=true?5800" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网格图上问题"/></a><div class="content"><a class="title" href="/posts/d8850d48.html" title="网格图上问题">网格图上问题</a><time datetime="2024-12-14T16:00:00.000Z" title="发表于 2024-12-15 00:00:00">2024-12-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
