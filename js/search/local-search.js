@@ -234,7 +234,7 @@ class LocalSearch {
   }
 }
 
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
 // Search
   const { path, top_n_per_article, unescape, languages } = GLOBAL_CONFIG.localSearch
   const localSearch = new LocalSearch({
