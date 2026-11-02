@@ -1,0 +1,243 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>为一篇推理论文准备环境，为什么两步训练也折腾了这么久 | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f6f7f4"><meta name="description" content="从准备复现一篇推理论文，到跑通七卡两步 GRPO，记录驱动库错配、回答截断与进程退出的排查经历。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为一篇推理论文准备环境，为什么两步训练也折腾了这么久">
+<meta property="og:url" content="https://blog.afywty.top/posts/d1b0b961.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="从准备复现一篇推理论文，到跑通七卡两步 GRPO，记录驱动库错配、回答截断与进程退出的排查经历。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.afywty.top/img/ocean-notes.svg?2186">
+<meta property="article:published_time" content="2026-11-02T08:46:26.000Z">
+<meta property="article:modified_time" content="2026-11-02T08:47:36.342Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="GRPO">
+<meta property="article:tag" content="vLLM">
+<meta property="article:tag" content="工程复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.afywty.top/img/ocean-notes.svg?2186"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "为一篇推理论文准备环境，为什么两步训练也折腾了这么久",
+  "url": "https://blog.afywty.top/posts/d1b0b961.html",
+  "image": "https://blog.afywty.top/img/ocean-notes.svg?2186",
+  "datePublished": "2026-11-02T08:46:26.000Z",
+  "dateModified": "2026-11-02T08:47:36.342Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/d1b0b961.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#101f28')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f7f4')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '为一篇推理论文准备环境，为什么两步训练也折腾了这么久',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/notebook.css?v=20261024"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">216</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/acm/"><i class="fa-fw fas fa-code"></i><span> ACM</span></a></div><div class="menus_item"><a class="site-page" href="/llm/"><i class="fa-fw fas fa-brain"></i><span> LLM</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/img/ocean-notes.svg?2186);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">为一篇推理论文准备环境，为什么两步训练也折腾了这么久</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/acm/"><i class="fa-fw fas fa-code"></i><span> ACM</span></a></div><div class="menus_item"><a class="site-page" href="/llm/"><i class="fa-fw fas fa-brain"></i><span> LLM</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">为一篇推理论文准备环境，为什么两步训练也折腾了这么久</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-02T08:46:26.000Z" title="发表于 2026-11-02 16:46:26">2026-11-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-02T08:47:36.342Z" title="更新于 2026-11-02 16:47:36">2026-11-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/">LLM</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/">模型训练</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-11-02 16:47:36&quot;}" hidden></div><p>准备复现一篇大模型论文时，我们给自己定了一个很小的起点。先让一个公开模型读几道数学题，生成回答，更新两次参数，然后正常结束。如果这一圈跑通，再投入时间做正式训练和评测。</p>
+<p>这个听起来只需要几分钟的小检查，最后经历了几轮排查。先是 GPU 初始化失败，接着是训练步数增加了、参数却没变化，好不容易看到真实更新，进程又在收尾时崩溃。最让人困惑的一次，训练已经结束，显存看起来还占着一大块。</p>
+<p>事情起于《Self-Distilled Reasoner》这篇论文。它研究怎样让同一个语言模型给自己提供训练信号。学生只看到题目，教师还能看到参考解答。学生先生成自己的解题过程，再从教师那里获得逐步的训练指导。我们选择其中较小的 Qwen3-1.7B 开始，便于控制第一次验证的成本。<a target="_blank" rel="noopener" href="https://arxiv.org/html/2601.18734v3">论文与方法说明</a></p>
+<p>论文还比较了 GRPO 这条强化学习基线。它对同一道题采样一组回答，按正确性打分，再根据组内的相对表现更新模型。我们先验证这条基线，希望确认生成、评分、反向传播和分布式更新都能走通。后面的自蒸馏实验有自己的训练目标和评测安排，需要继续单独验证。<a target="_blank" rel="noopener" href="https://github.com/siyan-zhao/OPSD/blob/ae7d2519e94920c4eb6206c0c26de46d9c50abae/scripts/run_grpo.sh">公开 GRPO 入口</a></p>
+<p>做这种检查，很快就会遇到两个同时争用显存的角色。训练框架负责计算梯度和更新参数，vLLM 负责高效生成回答。这次采用共置方式，让它们在同一组 GPU 上轮流工作。驱动、深度学习框架、推理引擎和多卡通信都要配合，模型才有机会真正开始学习。</p>
+<p>手里已经有一个 vLLM 镜像，所以最初从它开始盘点。镜像标签是 0.10.1，里面实际搭配的是 Python 3.12 和 Torch 2.7.1。容器启动时先被 CUDA 版本约束拦住，进入盘点环境后，GPU 初始化又返回了错误码 803。</p>
+<p>这时只看镜像标签和宿主驱动版本，解释不了进程到底用了哪套库。我们在每一种启动环境下各起一个新进程，调用 CUDA 的初始化接口，再检查进程实际加载的驱动库文件。三次结果把问题缩小到了库的选择。</p>
+<table>
+<thead>
+<tr>
+<th>启动环境</th>
+<th>实际加载的驱动库</th>
+<th>初始化返回码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>镜像默认环境</td>
+<td><code>libcuda.so.570.124.06</code></td>
+<td>803</td>
+</tr>
+<tr>
+<td>取消 <code>LD_LIBRARY_PATH</code></td>
+<td><code>libcuda.so.570.124.06</code></td>
+<td>803</td>
+</tr>
+<tr>
+<td>优先加载与宿主匹配的驱动库</td>
+<td><code>libcuda.so.525.125.06</code></td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>取消一个环境变量以后，进程仍然选中了同一个不匹配的库。让它实际加载匹配的库后，初始化才成功，随后浮点和 BF16 运算也通过了。这次排查让我更愿意先问一句，正在运行的进程到底加载了什么？</p>
+<p>之后按公开仓库的依赖要求准备了独立环境。最后跑通的组合是 Python 3.10、Torch 2.8.0、vLLM 0.11.0 和 TRL 0.26.0，另外使用了 Transformers 4.57.1、DeepSpeed 0.18.2、FlashAttention 2.8.3。安装后先检查导入和依赖一致性，再检查单卡计算、CPU 优化器、多卡通信和小模型生成。每通过一层，才继续往完整训练入口走。<a target="_blank" rel="noopener" href="https://github.com/siyan-zhao/OPSD/blob/ae7d2519e94920c4eb6206c0c26de46d9c50abae/environment.yml">仓库环境配置</a></p>
+<p>第一版小检查刻意把预算压得很低。只训练两步，回答最多生成 256 tokens。token 是模型计算文本长度的单位。它确实很快走完了优化器计数，但这批回答全部被截断，组内优势全为零，抽查的参数也没有变化。</p>
+<p>回头看，这是一个很容易漏掉的问题。对推理模型来说，一段解题过程可能已经写了几百个 token，最后答案还没出现。若一组回答得到相同的正确性奖励，GRPO 就没有组内相对差异可用。这时进度条走到了第二步，也不能说明我们观察到了有效更新。</p>
+<p>于是我们保留两次优化更新，把生成长度恢复到论文 GRPO 配置允许的范围。题目最多 2,048 tokens，回答最多 16,000 tokens，每题采样 8 条，温度 1.2。<code>num_iterations=2</code> 让同一批生成结果用于两次更新。这样既能限制检查时长，也给模型留下了把题答完的机会。<a target="_blank" rel="noopener" href="https://arxiv.org/html/2601.18734v3#A2.T6">论文训练配置</a></p>
+<p>实际可用的是七张卡，原启动示例按八卡组织全局批量。为了保留每题八条回答，并让各卡采用相同的整数分批方式，这次使用全局批量 56，论文中的对应值为 32。我们把这个差异写进结果里。数据来自公开数学训练集的八行真实题目，本次验收只覆盖这批数据上的两次更新。</p>
+<p>回答能正常结束以后，我们终于看到了非零梯度和参数变化。随后却出现了更意外的情况。计算主体完成了，进程在退出时发生原生崩溃，日志指向 CUDA 内存池的析构。</p>
+<p>当时为了节省显存，额外打开了 vLLM 的 sleep mode。它允许共置的推理引擎在暂时不用时释放或转移一部分显存，给训练阶段让出空间。这个功能也让资源管理更复杂了，退出时需要处理 Python 对象、模型张量以及底层分配器之间的生命周期。</p>
+<p>生成时，引擎会把注意力计算中的一部分信息保存在 KV 缓存中，避免每一步都从头计算。排查中，这部分缓存的活动字节先降到了零，模型权重却仍然被引用。继续看源码，还发现这个版本的模型构造过程会为同一个实例注册两条编译回调。我们曾误以为只有一条，额外写出的数量断言因此又制造了一次失败。修正断言、注销回调之后，外层引擎对象已经回收，仍有权重张量存活。还有哪些对象持有它们，当时的证据没有完整定位出来。<a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm/blob/v0.11.0/vllm/compilation/wrapper.py">对应版本的编译回调源码</a></p>
+<p>转折来自重新阅读原始配置。仓库的 GRPO 启动脚本没有开启 sleep mode，锁定的 TRL 版本默认值也是 <code>False</code>。在对应的 vLLM 实现里，开启它会让权重和 KV 缓存进入专用内存池。最终一轮恢复了这个默认配置，使用标准的引擎关闭和通信组销毁接口，再由外部监督进程确认真正的退出结果。<a target="_blank" rel="noopener" href="https://github.com/huggingface/trl/blob/v0.26.0/trl/trainer/grpo_config.py">TRL 默认配置</a> · <a target="_blank" rel="noopener" href="https://github.com/vllm-project/vllm/blob/v0.11.0/vllm/v1/worker/gpu_worker.py">vLLM 内存分配路径</a></p>
+<p>关闭 sleep 以后，推理侧的 KV 缓存会在优化阶段继续占用显存，因此还要重新核算预算。我们保留每题 8 个回答，但让引擎每次最多同时处理 4 条，其余排队。根据公开模型结构计算，四条达到本次总长度上限的序列需要约 7.71 GiB 的 KV 缓存，放在每卡 8 GiB 的预算内。生成条数和同时生成的条数可以分别控制，这为长回答留下了空间。</p>
+<p>最后一轮终于完整结束。从启动到完成约 8 分 37 秒，外部监督进程收到了下面这些结果。</p>
+<table>
+<thead>
+<tr>
+<th>观察对象</th>
+<th>实测结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>多卡计算</td>
+<td>七个训练进程都完成了启动通信校验，编译后正常计算</td>
+</tr>
+<tr>
+<td>生成</td>
+<td>56 条回答全部以结束标记 EOS 收尾，长度为 663 至 12,504 tokens</td>
+</tr>
+<tr>
+<td>更新</td>
+<td>每个进程完成 16 次小批量计算，累积梯度后执行两步优化，抽查的参数片段发生了变化</td>
+</tr>
+<tr>
+<td>退出</td>
+<td>七个训练进程的实际退出码全部为 0</td>
+</tr>
+<tr>
+<td>显存</td>
+<td>七张卡在进程退出后第一次采样时，全部回到开跑前的空闲基线，计算进程列表为空</td>
+</tr>
+</tbody>
+</table>
+<p>其中最值得留下的观察发生在进程结束前后。进程内最后一次读取 PyTorch 计数器，每个进程仍有约 11.28 GiB 的已分配显存。等七个进程正常退出，外部采样已经全部回到了基线。在这个案例里，进程结束前看到张量还活着，不能单凭这个读数判断资源最终没有归还。</p>
+<p>这也改变了我们给小检查收尾的方式。训练进程记录生成结果、梯度和参数变化，外部监督进程记录实际退出码、退出后的进程列表和显存。每次运行都留下独立结果，计算完成、异常终止和结果回传各有自己的状态。后来再判断一次检查是否通过，就能直接读到这些证据。</p>
+<p>这次准备工作到这里告一段落。它已经证明这组公开模型和依赖能够完成七卡两步 GRPO，并在结束后交还显存。接下来的自蒸馏训练、长时间运行和数学榜单评测，还需要沿着同样的证据链继续做。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/d1b0b961.html">https://blog.afywty.top/posts/d1b0b961.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/GRPO/">GRPO</a><a class="post-meta__tags" href="/tags/vLLM/">vLLM</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E7%A8%8B%E5%A4%8D%E7%8E%B0/">工程复现</a></div><div class="post-share"><div class="social-share" data-image="/img/ocean-notes.svg?2186" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/78fd8a54.html" title="二维和一维坐标相互转换"><img class="cover" src="/img/ocean-notes.svg?6328" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">二维和一维坐标相互转换</div></div><div class="info-2"><div class="info-item-1">123456789int id(int x,int y,int m)&#123;	//m列	return m*(x-1)+y;&#125;pii rid(int u,int m)&#123;	int x=(u+m-1)/m;//m列	int y=u%m;if(y==0)y+=m;	return make_pair(x,y);&#125;</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">写算法，也记录对世界的好奇。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">216</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>在 GitHub 相遇</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/d1b0b961.html" title="为一篇推理论文准备环境，为什么两步训练也折腾了这么久">为一篇推理论文准备环境，为什么两步训练也折腾了这么久</a><time datetime="2026-11-02T08:46:26.000Z" title="发表于 2026-11-02 16:46:26">2026-11-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1828b237.html" title="starrycoding周赛">starrycoding周赛</a><span>整理日期：</span><time datetime="2025-01-30T16:00:00.000Z" title="按学习顺序编排，非原始发表时间">2025-01-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/78fd8a54.html" title="二维和一维坐标相互转换">二维和一维坐标相互转换</a><span>整理日期：</span><time datetime="2025-01-30T16:00:00.000Z" title="按学习顺序编排，非原始发表时间">2025-01-31</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/da2645d.html" title="二维vector的使用">二维vector的使用</a><span>整理日期：</span><time datetime="2025-01-27T16:00:00.000Z" title="按学习顺序编排，非原始发表时间">2025-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/692da4c5.html" title="关于位运算的一些需要搞清楚的边界">关于位运算的一些需要搞清楚的边界</a><span>整理日期：</span><time datetime="2025-01-25T16:00:00.000Z" title="按学习顺序编排，非原始发表时间">2025-01-26</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><link rel="stylesheet" href="/lib/katex/katex.min.css"><style>#article-container .katex { display: inline; }
+#article-container .katex-display > .katex { display: block; }</style></div><script src="/js/click-fireworks.js?v=20261024" defer></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
