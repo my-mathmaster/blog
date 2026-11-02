@@ -50,13 +50,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .hero-eyebrow { color: #a1c9ca; margin-bottom: 14px; }
 .hero-description { color: #e7f0eb; font-size: 23px; letter-spacing: .04em; margin: 16px 0 4px; }
 .hero-note { max-width: 39em; color: #b4cbd0; font-size: 14px; line-height: 2; text-wrap: balance; margin: 0 0 26px; }
-.hero-actions { display: flex; gap: 14px; align-items: center; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
 .hero-actions a { padding: 10px 20px; border-radius: 7px; font-size: 14px; font-weight: 600; transition: transform .2s, background .2s; }
 .hero-actions a:hover { transform: translateY(-2px); }
 .hero-actions a.hero-primary { background: #d7eae0; color: #173e4a; }
 .hero-primary span { margin-left: 18px; }
-.hero-actions a.hero-secondary { border: 1px solid #5c838c; color: #e0efec; }
-.hero-actions a.hero-secondary:hover { background: #ffffff12; }
+.hero-actions a:not(.hero-primary) { border: 1px solid #5c838c; color: #e0efec; }
+.hero-actions a:not(.hero-primary):hover { background: #ffffff12; }
 .hero-caption { color: #a5c3c8; font-size: 12px; margin-top: 27px; letter-spacing: .07em; }
 .hero-dot { display: inline-block; width: 6px; height: 6px; margin-right: 9px; border-radius: 50%; background: #e5bf77; }
 #page-header #scroll-down { bottom: 13px; }
@@ -191,8 +191,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   #article-container .notes-intro-lead { font-size: 21px; }
   #article-container .notes-intro-body { font-size: 15px; }
   .hero-eyebrow { font-size: 9px; letter-spacing: .16em; }
-  .hero-actions { gap: 10px; }
-  .hero-actions a { padding: 9px 13px; font-size: 12px; }
+  .hero-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 10px; width: 100%; max-width: 360px; }
+  .hero-actions a { display: flex; align-items: center; justify-content: center; padding: 9px 8px; font-size: 12px; text-align: center; }
   .hero-primary span { margin-left: 10px; }
   .hero-caption { font-size: 11px; margin-top: 26px; }
   #page-header.not-home-page { height: 220px; }
