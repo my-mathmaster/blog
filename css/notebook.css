@@ -32,7 +32,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 #page-header { background-color: #123440; }
 #page-header::before { background: transparent !important; }
-#page-header.full_page { height: 540px; min-height: 0; background-attachment: scroll; }
+#page-header.full_page { height: auto; min-height: 540px; background-attachment: scroll; }
 #page-header #nav { height: 76px; padding: 0 max(32px, calc((100vw - 1320px) / 2)); box-shadow: none; }
 #nav .site-name { font-size: 20px; letter-spacing: .02em; }
 #nav .site-page { font-size: 14px; }
@@ -49,7 +49,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .hero-eyebrow, .notebook-eyebrow { font-family: 'Cascadia Code', Consolas, monospace; font-size: 11px; letter-spacing: .2em; }
 .hero-eyebrow { color: #a1c9ca; margin-bottom: 14px; }
 .hero-description { color: #e7f0eb; font-size: 23px; letter-spacing: .04em; margin: 16px 0 4px; }
-.hero-note { color: #b4cbd0; font-size: 14px; margin: 0 0 26px; }
+.hero-note { max-width: 39em; color: #b4cbd0; font-size: 14px; line-height: 2; text-wrap: balance; margin: 0 0 26px; }
 .hero-actions { display: flex; gap: 14px; align-items: center; }
 .hero-actions a { padding: 10px 20px; border-radius: 7px; font-size: 14px; font-weight: 600; transition: transform .2s, background .2s; }
 .hero-actions a:hover { transform: translateY(-2px); }
@@ -179,7 +179,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   .section-nav { gap: 0 14px; }
   .section-name { font-size: 14px; gap: 6px; }
   .section-description { font-size: 11px; }
-  #page-header.full_page { height: 485px; background-position: 66% center; }
+  #page-header.full_page { min-height: 485px; background-position: 66% center; }
   #page-header.full_page::before { background: linear-gradient(90deg, #112c38ef, #112c3899) !important; }
   #page-header #nav { height: 64px; padding: 0 20px; }
   #nav .site-name { font-size: 18px; }

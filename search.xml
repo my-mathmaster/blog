@@ -53,9 +53,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -1356,9 +1356,9 @@
       
         <tags>
             
-            <tag> 数学 </tag>
-            
             <tag> 难度·基础 </tag>
+            
+            <tag> 数学 </tag>
             
         </tags>
       
@@ -1414,9 +1414,9 @@
       
         <tags>
             
-            <tag> 数学 </tag>
-            
             <tag> 难度·基础 </tag>
+            
+            <tag> 数学 </tag>
             
         </tags>
       
@@ -1443,9 +1443,9 @@
       
         <tags>
             
-            <tag> 数学 </tag>
-            
             <tag> 难度·基础 </tag>
+            
+            <tag> 数学 </tag>
             
         </tags>
       
@@ -1472,9 +1472,9 @@
       
         <tags>
             
-            <tag> 数学 </tag>
-            
             <tag> 难度·基础 </tag>
+            
+            <tag> 数学 </tag>
             
         </tags>
       
@@ -1901,9 +1901,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -1930,9 +1930,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -2104,9 +2104,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -2365,9 +2365,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -2394,9 +2394,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -3059,9 +3059,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -3668,9 +3668,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -3842,9 +3842,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -3871,9 +3871,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -3927,9 +3927,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -3985,9 +3985,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -4159,9 +4159,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -4217,9 +4217,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -4882,9 +4882,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -5371,9 +5371,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -5400,9 +5400,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -5794,9 +5794,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -5888,35 +5888,6 @@
     
     
     <entry>
-      <title>20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数</title>
-      <link href="/posts/a4a5fc65.html"/>
-      <url>/posts/a4a5fc65.html</url>
-      
-        <content type="html"><![CDATA[<h1 id="两个正整数a，b，请问a∗b有哪些因子">两个正整数a，b，请问a∗b有哪些因子</h1><h1 id="1≤a-b≤1e9">1≤a,b≤1e9</h1><h1 id="求因子的数量并给出所有因子">求因子的数量并给出所有因子</h1><h3 id="本题无脑的暴力显然不能过，但用set存数，加上考虑到a-b的所有约数其实就是a的所有约数和b的所有约数分别相乘-核心）">本题无脑的暴力显然不能过，但用set存数，加上考虑到a*b的所有约数其实就是a的所有约数和b的所有约数分别相乘(核心）</h3><h1 id="补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础">补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础</h1><ul><li><a href="https://blog.csdn.net/qq_40438165/article/details/122030763">https://blog.csdn.net/qq_40438165/article/details/122030763</a></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"># define int long long</span><br><span class="line"></span><br><span class="line">const int N = 1e5 + 10;</span><br><span class="line">const int M = 2e5 + 10;</span><br><span class="line">const int inf = 0x3f3f3f3f;</span><br><span class="line">const int mod = 998244353;</span><br><span class="line"></span><br><span class="line">int n, m;</span><br><span class="line"></span><br><span class="line">set&lt;int&gt; yueshu(int x) &#123;</span><br><span class="line">    set&lt;int&gt; st;</span><br><span class="line">    for (int i = 1; i * i &lt;= x; i++) &#123;</span><br><span class="line">        if (x % i == 0)&#123;//这个大括号很重要，我debug的一个多小时的罪魁祸首</span><br><span class="line">            st.insert(i);</span><br><span class="line">        if (i * i != x)</span><br><span class="line">            st.insert(x / i);&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return st;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main() &#123;</span><br><span class="line">    cin.tie(0);</span><br><span class="line">    cout.tie(0);</span><br><span class="line">    ios::sync_with_stdio(false);</span><br><span class="line"></span><br><span class="line">    int t;</span><br><span class="line">    t = 1;</span><br><span class="line">    //cin&gt;&gt;t;</span><br><span class="line">    while (t--) &#123;</span><br><span class="line">        int a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">        set&lt;int&gt; s1, s2, ans;</span><br><span class="line">        s1 = yueshu(a);</span><br><span class="line">        s2 = yueshu(b);</span><br><span class="line">        for (auto x : s1) &#123;</span><br><span class="line">            for (auto y : s2) &#123;</span><br><span class="line">                ans.insert(x * y);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; ans.size() &lt;&lt; endl;</span><br><span class="line">        for (auto x : ans)</span><br><span class="line">            cout &lt;&lt; x &lt;&lt; &quot; &quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>但上面这种解法显然无法解决多个数的相乘的所有约数，考虑推广问题并给出dfs解法<br><a href="https://ac.nowcoder.com/acm/contest/view-submission?submissionId=62967953%EF%BC%88%E5%88%AB%E4%BA%BA%E7%94%A8lamda%E5%87%BD%E6%95%B0%E7%9A%84%E8%A7%A3%E6%B3%95%EF%BC%8C%E6%9C%89%E5%BE%85%E5%AD%A6%E4%B9%A0%EF%BC%89">https://ac.nowcoder.com/acm/contest/view-submission?submissionId=62967953（别人用lamda函数的解法，有待学习）</a></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"># define int long long</span><br><span class="line">typedef pair&lt;int,int&gt;pii;</span><br><span class="line">const int N = 1e5 + 10;</span><br><span class="line">const int M = 2e5 + 10;</span><br><span class="line">const int inf = 0x3f3f3f3f;</span><br><span class="line">const int mod = 998244353;</span><br><span class="line"></span><br><span class="line">int n, m;</span><br><span class="line">map&lt;int ,int&gt;mp;</span><br><span class="line"></span><br><span class="line">vector&lt;int&gt;ans;</span><br><span class="line">void dfs(int u,int s,vector&lt;pii&gt;&amp;res)&#123;</span><br><span class="line">if(u==res.size())</span><br><span class="line">&#123;</span><br><span class="line">   // cout&lt;&lt;u&lt;&lt;&quot; &quot;&lt;&lt;v.size()&lt;&lt;endl;</span><br><span class="line">    ans.push_back(s);</span><br><span class="line">    return ;</span><br><span class="line">&#125;</span><br><span class="line">for(int j=0;j&lt;=res[u].second;j++)&#123;</span><br><span class="line">    dfs(u+1,s,res);</span><br><span class="line">   // cout&lt;&lt;u&lt;&lt;&quot; &quot;&lt;&lt;j&lt;&lt;&quot; &quot;&lt;&lt;s&lt;&lt;endl;</span><br><span class="line">    s*=res[u].first;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main() &#123;</span><br><span class="line">    cin.tie(0);</span><br><span class="line">    cout.tie(0);</span><br><span class="line">    ios::sync_with_stdio(false);</span><br><span class="line"></span><br><span class="line">    int t;</span><br><span class="line">    t = 1;</span><br><span class="line"></span><br><span class="line">    while (t--) &#123;</span><br><span class="line">        int a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">       for(int i=2;i*i&lt;=a;i++)&#123;</span><br><span class="line">        if(a%i==0)&#123;</span><br><span class="line">           while(a%i==0)&#123;</span><br><span class="line">            mp[i]++;</span><br><span class="line">            a/=i;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(a&gt;1)mp[a]++;</span><br><span class="line">        for(int i=2;i*i&lt;=b;i++)&#123;</span><br><span class="line">        if(b%i==0)&#123;</span><br><span class="line">           while(b%i==0)&#123;</span><br><span class="line">            mp[i]++;</span><br><span class="line">            b/=i;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(b&gt;1)mp[b]++;</span><br><span class="line">  /*for (auto it = mp.begin(); it != mp.end(); ++it) &#123;</span><br><span class="line">    v.push_back(*it);</span><br><span class="line">&#125;*/</span><br><span class="line"> vector&lt;pii&gt;v(mp.begin(),mp.end());</span><br><span class="line">       dfs(0,1,v);</span><br><span class="line">       //for(auto[x,y]:v)cout&lt;&lt;x&lt;&lt;&quot; &quot;&lt;&lt;y&lt;&lt;endl;</span><br><span class="line">       cout&lt;&lt;ans.size()&lt;&lt;endl;</span><br><span class="line">       sort(ans.begin(),ans.end());</span><br><span class="line">       for(auto x:ans)&#123;</span><br><span class="line">        cout&lt;&lt;x&lt;&lt;&quot; &quot;;</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      
-      
-      <categories>
-          
-          <category> ACM </category>
-          
-          <category> 数学 </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 数学 </tag>
-            
-            <tag> 难度·进阶 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>2023牛客周赛 Round 6</title>
       <link href="/posts/3e350e36.html"/>
       <url>/posts/3e350e36.html</url>
@@ -5938,6 +5909,35 @@
             <tag> 比赛题解 </tag>
             
             <tag> 难度·基础 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>20230723牛客round4D题：给出一个大数的所有约数，通过dfs用质因子反向构造约数</title>
+      <link href="/posts/a4a5fc65.html"/>
+      <url>/posts/a4a5fc65.html</url>
+      
+        <content type="html"><![CDATA[<h1 id="两个正整数a，b，请问a∗b有哪些因子">两个正整数a，b，请问a∗b有哪些因子</h1><h1 id="1≤a-b≤1e9">1≤a,b≤1e9</h1><h1 id="求因子的数量并给出所有因子">求因子的数量并给出所有因子</h1><h3 id="本题无脑的暴力显然不能过，但用set存数，加上考虑到a-b的所有约数其实就是a的所有约数和b的所有约数分别相乘-核心）">本题无脑的暴力显然不能过，但用set存数，加上考虑到a*b的所有约数其实就是a的所有约数和b的所有约数分别相乘(核心）</h3><h1 id="补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础">补充常识：int范围内数的约数个数最多为1600，2e9数的约数个数最多为1536，这也是本题能这样暴力的基础</h1><ul><li><a href="https://blog.csdn.net/qq_40438165/article/details/122030763">https://blog.csdn.net/qq_40438165/article/details/122030763</a></li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"># define int long long</span><br><span class="line"></span><br><span class="line">const int N = 1e5 + 10;</span><br><span class="line">const int M = 2e5 + 10;</span><br><span class="line">const int inf = 0x3f3f3f3f;</span><br><span class="line">const int mod = 998244353;</span><br><span class="line"></span><br><span class="line">int n, m;</span><br><span class="line"></span><br><span class="line">set&lt;int&gt; yueshu(int x) &#123;</span><br><span class="line">    set&lt;int&gt; st;</span><br><span class="line">    for (int i = 1; i * i &lt;= x; i++) &#123;</span><br><span class="line">        if (x % i == 0)&#123;//这个大括号很重要，我debug的一个多小时的罪魁祸首</span><br><span class="line">            st.insert(i);</span><br><span class="line">        if (i * i != x)</span><br><span class="line">            st.insert(x / i);&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return st;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main() &#123;</span><br><span class="line">    cin.tie(0);</span><br><span class="line">    cout.tie(0);</span><br><span class="line">    ios::sync_with_stdio(false);</span><br><span class="line"></span><br><span class="line">    int t;</span><br><span class="line">    t = 1;</span><br><span class="line">    //cin&gt;&gt;t;</span><br><span class="line">    while (t--) &#123;</span><br><span class="line">        int a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">        set&lt;int&gt; s1, s2, ans;</span><br><span class="line">        s1 = yueshu(a);</span><br><span class="line">        s2 = yueshu(b);</span><br><span class="line">        for (auto x : s1) &#123;</span><br><span class="line">            for (auto y : s2) &#123;</span><br><span class="line">                ans.insert(x * y);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; ans.size() &lt;&lt; endl;</span><br><span class="line">        for (auto x : ans)</span><br><span class="line">            cout &lt;&lt; x &lt;&lt; &quot; &quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>但上面这种解法显然无法解决多个数的相乘的所有约数，考虑推广问题并给出dfs解法<br><a href="https://ac.nowcoder.com/acm/contest/view-submission?submissionId=62967953%EF%BC%88%E5%88%AB%E4%BA%BA%E7%94%A8lamda%E5%87%BD%E6%95%B0%E7%9A%84%E8%A7%A3%E6%B3%95%EF%BC%8C%E6%9C%89%E5%BE%85%E5%AD%A6%E4%B9%A0%EF%BC%89">https://ac.nowcoder.com/acm/contest/view-submission?submissionId=62967953（别人用lamda函数的解法，有待学习）</a></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line"># define int long long</span><br><span class="line">typedef pair&lt;int,int&gt;pii;</span><br><span class="line">const int N = 1e5 + 10;</span><br><span class="line">const int M = 2e5 + 10;</span><br><span class="line">const int inf = 0x3f3f3f3f;</span><br><span class="line">const int mod = 998244353;</span><br><span class="line"></span><br><span class="line">int n, m;</span><br><span class="line">map&lt;int ,int&gt;mp;</span><br><span class="line"></span><br><span class="line">vector&lt;int&gt;ans;</span><br><span class="line">void dfs(int u,int s,vector&lt;pii&gt;&amp;res)&#123;</span><br><span class="line">if(u==res.size())</span><br><span class="line">&#123;</span><br><span class="line">   // cout&lt;&lt;u&lt;&lt;&quot; &quot;&lt;&lt;v.size()&lt;&lt;endl;</span><br><span class="line">    ans.push_back(s);</span><br><span class="line">    return ;</span><br><span class="line">&#125;</span><br><span class="line">for(int j=0;j&lt;=res[u].second;j++)&#123;</span><br><span class="line">    dfs(u+1,s,res);</span><br><span class="line">   // cout&lt;&lt;u&lt;&lt;&quot; &quot;&lt;&lt;j&lt;&lt;&quot; &quot;&lt;&lt;s&lt;&lt;endl;</span><br><span class="line">    s*=res[u].first;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main() &#123;</span><br><span class="line">    cin.tie(0);</span><br><span class="line">    cout.tie(0);</span><br><span class="line">    ios::sync_with_stdio(false);</span><br><span class="line"></span><br><span class="line">    int t;</span><br><span class="line">    t = 1;</span><br><span class="line"></span><br><span class="line">    while (t--) &#123;</span><br><span class="line">        int a, b;</span><br><span class="line">        cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">       for(int i=2;i*i&lt;=a;i++)&#123;</span><br><span class="line">        if(a%i==0)&#123;</span><br><span class="line">           while(a%i==0)&#123;</span><br><span class="line">            mp[i]++;</span><br><span class="line">            a/=i;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(a&gt;1)mp[a]++;</span><br><span class="line">        for(int i=2;i*i&lt;=b;i++)&#123;</span><br><span class="line">        if(b%i==0)&#123;</span><br><span class="line">           while(b%i==0)&#123;</span><br><span class="line">            mp[i]++;</span><br><span class="line">            b/=i;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       if(b&gt;1)mp[b]++;</span><br><span class="line">  /*for (auto it = mp.begin(); it != mp.end(); ++it) &#123;</span><br><span class="line">    v.push_back(*it);</span><br><span class="line">&#125;*/</span><br><span class="line"> vector&lt;pii&gt;v(mp.begin(),mp.end());</span><br><span class="line">       dfs(0,1,v);</span><br><span class="line">       //for(auto[x,y]:v)cout&lt;&lt;x&lt;&lt;&quot; &quot;&lt;&lt;y&lt;&lt;endl;</span><br><span class="line">       cout&lt;&lt;ans.size()&lt;&lt;endl;</span><br><span class="line">       sort(ans.begin(),ans.end());</span><br><span class="line">       for(auto x:ans)&#123;</span><br><span class="line">        cout&lt;&lt;x&lt;&lt;&quot; &quot;;</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> ACM </category>
+          
+          <category> 数学 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数学 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -6128,9 +6128,9 @@
       
         <tags>
             
-            <tag> 难度·进阶 </tag>
-            
             <tag> 比赛题解 </tag>
+            
+            <tag> 难度·进阶 </tag>
             
         </tags>
       
@@ -6246,10 +6246,10 @@
     
     <entry>
       <title></title>
-      <link href="/css/notebook.css"/>
-      <url>/css/notebook.css</url>
+      <link href="/css/technical-reading.css"/>
+      <url>/css/technical-reading.css</url>
       
-        <content type="html"><![CDATA[/* Ocean notebook: local styles, shared by all Hexo pages. */:root {  --paper: #f6f7f4;  --sheet: #fff;  --ink: #233b48;  --muted: #6a7e86;  --line: #dde7e5;  --accent: #167d8d;  --wash: #edf5f3;  --card-bg: var(--sheet);  --font-color: var(--ink);  --text-highlight-color: var(--ink);}[data-theme="dark"] {  --paper: #101f28;  --sheet: #182d37;  --ink: #dfebe9;  --muted: #a2b7bd;  --line: #2c4650;  --accent: #79c9d2;  --wash: #203e47;  --card-bg: var(--sheet);  --font-color: var(--ink);  --text-highlight-color: var(--ink);}html { scroll-behavior: smooth; scroll-padding-top: 86px; }body { background: var(--paper); color: var(--ink); }::selection { background: #b5dfda; color: #112a38; }a, button, [role="button"] { -webkit-tap-highlight-color: transparent; }a:focus-visible, button:focus-visible, input:focus-visible {  outline: 3px solid #d99a43; outline-offset: 5px; border-radius: 4px;}#page-header { background-color: #123440; }#page-header::before { background: transparent !important; }#page-header.full_page { height: 540px; min-height: 0; background-attachment: scroll; }#page-header #nav { height: 76px; padding: 0 max(32px, calc((100vw - 1320px) / 2)); box-shadow: none; }#nav .site-name { font-size: 20px; letter-spacing: .02em; }#nav .site-page { font-size: 14px; }#nav .menus_items .menus_item { padding: 0 0 0 17px; }#nav .menus_items .menus_item .site-page::after { background: #e5bf77; height: 2px; }#page-header.nav-fixed #nav { background: var(--sheet); box-shadow: 0 2px 20px #102c3810; }#page-header.nav-fixed #nav a, #page-header.nav-fixed #nav span.site-page { color: var(--ink); }#page-header.full_page #site-info {  position: relative; top: auto; margin: 0 auto; padding: 139px 48px 54px; max-width: 1320px; text-align: left;}#page-header.full_page #site-title {  text-align: left; color: #f1f6ef; font-size: clamp(32px, 3.7vw, 50px); font-weight: 650; letter-spacing: .04em; text-shadow: none;}.hero-eyebrow, .notebook-eyebrow { font-family: 'Cascadia Code', Consolas, monospace; font-size: 11px; letter-spacing: .2em; }.hero-eyebrow { color: #a1c9ca; margin-bottom: 14px; }.hero-description { color: #e7f0eb; font-size: 23px; letter-spacing: .04em; margin: 16px 0 4px; }.hero-note { color: #b4cbd0; font-size: 14px; margin: 0 0 26px; }.hero-actions { display: flex; gap: 14px; align-items: center; }.hero-actions a { padding: 10px 20px; border-radius: 7px; font-size: 14px; font-weight: 600; transition: transform .2s, background .2s; }.hero-actions a:hover { transform: translateY(-2px); }.hero-actions a.hero-primary { background: #d7eae0; color: #173e4a; }.hero-primary span { margin-left: 18px; }.hero-actions a.hero-secondary { border: 1px solid #5c838c; color: #e0efec; }.hero-actions a.hero-secondary:hover { background: #ffffff12; }.hero-caption { color: #a5c3c8; font-size: 12px; margin-top: 27px; letter-spacing: .07em; }.hero-dot { display: inline-block; width: 6px; height: 6px; margin-right: 9px; border-radius: 50%; background: #e5bf77; }#page-header #scroll-down { bottom: 13px; }#page-header #scroll-down i { font-size: 17px; animation: none; opacity: .6; }#page-header.not-home-page { height: 260px; }#page-header #page-site-info { top: 125px; }#page-header.not-home-page #site-title { font-size: 34px; letter-spacing: .05em; }#page-header.post-bg { height: 320px; }#page-header.post-bg::before { background: linear-gradient(90deg, #102c38d9, #102c3840) !important; }#page-header #post-info { bottom: 44px; }#post-info .post-title { font-size: clamp(26px, 3.3vw, 38px); line-height: 1.45; text-shadow: none; }#post-info #post-meta { color: #d2e5e5; font-size: 13px; }.layout { max-width: 1320px; padding: 40px 32px 60px; gap: 26px; }.layout > div:first-child { min-width: 0; }#aside-content { width: 270px; flex: 0 0 270px; padding-left: 0; }#recent-posts { flex: 1; width: calc(100% - 296px); }.notebook-heading { display: flex; justify-content: space-between; align-items: center; margin: 0 2px 22px; gap: 12px; }.notebook-eyebrow { color: var(--muted); font-size: 10px; }.notebook-heading h2 { margin: 0; color: var(--ink); font-size: 25px; font-weight: 600; letter-spacing: .04em; }.notebook-heading > a { color: var(--accent); font-size: 13px; border-bottom: 1px solid var(--line); }.section-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0 0 30px; border-top: 1px solid var(--line); }.section-link { display: block; min-width: 0; padding: 17px 4px; border-bottom: 1px solid var(--line); color: var(--ink); }.section-name { display: flex; gap: 10px; align-items: center; font-size: 16px; font-weight: 600; }.section-name i { color: var(--accent); width: 20px; text-align: center; flex-shrink: 0; }.section-description { display: block; margin-top: 5px; font-size: 12px; color: var(--muted); line-height: 1.8; }.section-link:hover, .section-link[aria-current="page"] { color: var(--accent); background: var(--wash); }.section-link[aria-current="page"] { border-bottom-color: var(--accent); }.section-count, .section-date { color: var(--muted); font-size: 13px; }.section-date { display: block; }.section-date time { margin-left: 6px; }#article-container .section-posts { list-style: none; padding: 0; }#article-container .section-posts li { padding: 16px 0; border-bottom: 1px solid var(--line); }.section-empty { padding: 20px 24px; background: var(--wash); border-radius: 8px; }.notes-intro { margin: 24px 0 32px; padding: 6px 0 6px 22px; border-left: 2px solid var(--accent); }.notes-intro-accessible { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }#article-container .notes-intro-lead { margin: 0 0 12px; color: var(--ink); font-family: 'Songti SC', 'STSong', 'Noto Serif CJK SC', serif; font-size: 24px; line-height: 1.8; letter-spacing: .05em; }#article-container .notes-intro-body { max-width: 34em; margin: 0; color: var(--muted); font-size: 16px; line-height: 2.1; }.notes-letter { animation: notes-ink-in 550ms ease-out both; animation-delay: var(--reveal-delay); }@keyframes notes-ink-in { from { opacity: 0; } to { opacity: 1; } }#recent-posts .recent-post-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }#recent-posts .recent-post-item {  display: block; margin: 0; width: 100%; height: auto; min-height: 215px; border: 1px solid var(--line); border-radius: 12px;  background: var(--sheet); box-shadow: 0 3px 12px #153e4803; transition: border-color .2s, box-shadow .2s, transform .2s;}#recent-posts .recent-post-item:hover { transform: translateY(-3px); border-color: #8ab6b8; box-shadow: 0 8px 24px #153e480a; }#recent-posts .recent-post-item > .recent-post-info { padding: 26px 26px 24px; width: 100%; height: auto; }.note-kicker { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 13px; font-size: 11px; color: var(--muted); }.note-level { flex-shrink: 0; color: var(--accent); background: var(--wash); padding: 2px 9px; border-radius: 4px; font-size: 11px; }.note-level[data-level="提高"], .note-level[data-level="专题"] { color: #9c6728; background: #faf1e0; }[data-theme="dark"] .note-level[data-level="提高"], [data-theme="dark"] .note-level[data-level="专题"] { color: #eac589; background: #493d2b; }#recent-posts .recent-post-item .article-title { color: var(--ink); font-size: 20px; line-height: 1.5; -webkit-line-clamp: 2; }#recent-posts .recent-post-item .article-title:hover { color: var(--accent); }#recent-posts .recent-post-item .article-meta-wrap { margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.9; }#recent-posts .article-meta-wrap > .article-meta { display: none; }#recent-posts .post-meta-date .article-meta-label { margin: 0 5px; }#recent-posts .recent-post-item .content { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.9; -webkit-line-clamp: 3; overflow-wrap: anywhere; }#aside-content .card-widget, .layout > #page, .layout > #post, .layout > #archive, .layout > #tag, .layout > #category {  background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; box-shadow: none;}#aside-content .card-widget { padding: 22px; margin-top: 20px; }#aside-content > .card-widget:first-child { margin-top: 0; }#aside-content .card-info { background: linear-gradient(155deg, var(--wash), var(--sheet) 70%); }#aside-content .avatar-img { width: 88px; height: 88px; border: 4px solid var(--sheet); box-shadow: 0 0 0 1px var(--line); margin: 3px auto 12px; }#aside-content .author-info-name { font-size: 22px; color: var(--ink); }#aside-content .author-info-description { color: var(--muted); font-size: 13px; }[data-theme="dark"] .social-icon .fa-github { color: var(--ink) !important; }#aside-content .site-data .headline { font-size: 12px; color: var(--muted); }#aside-content .site-data .length-num { font-family: Georgia, serif; font-size: 24px; }#aside-content .card-info #card-info-btn { background: #1e6170; border-radius: 6px; font-size: 13px; padding: 7px 0; }#aside-content .item-headline { font-size: 15px; font-weight: 600; }#aside-content .item-headline i { color: var(--accent); }#aside-content .aside-list-item .content .title { font-size: 13px; line-height: 1.7; }#aside-content .aside-list-item .content time { font-size: 11px; color: var(--muted); }.layout > #page, .layout > #post { padding: 38px 42px; }#article-container { line-height: 1.95; overflow-wrap: break-word; font-size: 16px; }#article-container h1, #article-container h2, #article-container h3 { color: var(--ink); letter-spacing: .01em; }#article-container h2 { margin: 1.8em 0 .8em; padding-bottom: .4em; border-bottom: 1px solid var(--line); font-size: 1.5em; }#article-container a { color: var(--accent); }#article-container blockquote { border-left: 3px solid var(--accent); background: var(--wash); color: var(--muted); border-radius: 0 8px 8px 0; padding: 12px 18px; font-size: 14px; }#article-container figure.highlight { border-radius: 9px; margin: 22px 0; font-size: 13px; }#article-container pre { tab-size: 4; }#article-container .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding: 8px 0; }#article-container table { font-size: 14px; }.acm-notebook #article-container > ul:first-of-type { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }.acm-notebook #article-container > ul:first-of-type li { margin: 0; }.acm-notebook #article-container > ul:first-of-type a { display: block; background: var(--wash); border: 1px solid var(--line); padding: 5px 12px; border-radius: 6px; font-size: 13px; }.acm-notebook #article-container > ul:not(:first-of-type) { padding-left: 22px; }.acm-notebook #article-container > ul:not(:first-of-type) li { margin: 6px 0; font-size: 14px; color: var(--muted); }#pagination { margin-top: 30px; }#pagination .page-number, #pagination .extend { border-radius: 6px; box-shadow: none; }#pagination .page-number.current { background: #1e6170; }#footer { background: #102e3a; margin-top: 12px; }#footer-wrap { color: #b6ced1; padding: 32px 20px; font-size: 12px; line-height: 2; }#footer-wrap a { color: #d9e9e5; }#rightside > div > button, #rightside > div > a { border-radius: 7px; background: #1e6170; }#local-search .search-dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--sheet); }#local-search .search-dialog-title, #local-search .search-result-title { color: var(--accent); }#links .link-navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }#links .link-navigation::after { display: none; }#links .link-navigation .card { width: 100%; margin: 0; padding: 20px; border: 1px solid var(--line); border-radius: 10px; float: none; background: var(--wash); }#links .link-navigation .card:hover { transform: translateY(-3px); }#links .card .card-header .info { white-space: normal; color: var(--muted); }#links .card .card-header a { color: var(--accent); }@media (min-width: 1500px) { #page-header.full_page { background-size: cover; } }@media (max-width: 1100px) {  #page-header #nav { padding: 0 24px; }  #nav .menus_items .menus_item { padding-left: 11px; }  #page-header.full_page #site-info { padding-left: 32px; }  #aside-content { width: 240px; flex-basis: 240px; }  .layout { padding: 30px 24px 48px; gap: 20px; }  #recent-posts .recent-post-item > .recent-post-info { padding: 21px; }  #recent-posts .recent-post-items { gap: 16px; }  .layout > #page, .layout > #post { padding: 30px; }}@media (max-width: 900px) and (min-width: 769px) {  #recent-posts .recent-post-items { grid-template-columns: 1fr; }  #recent-posts .recent-post-item { min-height: 0; }}@media (max-width: 768px) {  .section-nav { gap: 0 14px; }  .section-name { font-size: 14px; gap: 6px; }  .section-description { font-size: 11px; }  #page-header.full_page { height: 485px; background-position: 66% center; }  #page-header.full_page::before { background: linear-gradient(90deg, #112c38ef, #112c3899) !important; }  #page-header #nav { height: 64px; padding: 0 20px; }  #nav .site-name { font-size: 18px; }  #page-header.full_page #site-info { padding: 121px 25px 28px; }  #page-header.full_page #site-title { font-size: 34px; }  .hero-description { font-size: 19px; margin-top: 18px; }  .hero-note { font-size: 12px; margin-top: 5px; margin-bottom: 24px; }  .notes-intro { padding-left: 16px; }  #article-container .notes-intro-lead { font-size: 21px; }  #article-container .notes-intro-body { font-size: 15px; }  .hero-eyebrow { font-size: 9px; letter-spacing: .16em; }  .hero-actions { gap: 10px; }  .hero-actions a { padding: 9px 13px; font-size: 12px; }  .hero-primary span { margin-left: 10px; }  .hero-caption { font-size: 11px; margin-top: 26px; }  #page-header.not-home-page { height: 220px; }  #page-header #page-site-info { top: 110px; }  #page-header.not-home-page #site-title { font-size: 28px; }  #page-header.post-bg { height: 300px; }  #page-header #post-info { bottom: 28px; padding: 0 8px; }  #post-info .post-title { font-size: 26px; }  #post-info #post-meta { font-size: 11px; }  .layout { padding: 26px 16px 36px; gap: 22px; }  #recent-posts { width: 100%; }  #recent-posts .recent-post-items { grid-template-columns: 1fr; gap: 15px; }  #recent-posts .recent-post-item { min-height: 0; }  #recent-posts .recent-post-item > .recent-post-info { padding: 22px; }  #recent-posts .recent-post-item .article-title { font-size: 21px; }  .notebook-heading { margin-bottom: 18px; }  .notebook-heading h2 { font-size: 23px; }  .notebook-heading > a { font-size: 12px; }  #aside-content { width: 100%; flex-basis: auto; }  .layout > #page, .layout > #post { padding: 25px 21px; }  #article-container { font-size: 15px; }  #links .link-navigation { grid-template-columns: 1fr; }}@media (prefers-reduced-motion: reduce) {  html { scroll-behavior: auto; }  .notes-letter { animation: none; }  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }}]]></content>
+        <content type="html"><![CDATA[/* Serif typography for posts that opt in with reading_style: technical. */.layout > #post.technical-reading {  --reading-paper: #fdfcf7;  --reading-ink: #1a1a1a;  --reading-muted: #5f625f;  --reading-line: #d6d0c0;  --reading-blue: #1a4a8c;  --reading-code: #f4f1ea;  background: var(--reading-paper);  color: var(--reading-ink);}[data-theme="dark"] .layout > #post.technical-reading {  --reading-paper: #1d2529;  --reading-ink: #e7e4da;  --reading-muted: #b6b6ad;  --reading-line: #49545a;  --reading-blue: #a8c8ef;  --reading-code: #293338;}#post.technical-reading #article-container,#post.technical-reading #post-info .post-title {  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", Georgia,    "Songti SC", "STSong", serif;}#post.technical-reading #article-container {  max-width: 760px;  margin: 0 auto;  color: var(--reading-ink);  font-size: 16px;  line-height: 1.75;  letter-spacing: 0;}#post.technical-reading #post-info {  max-width: 760px;  margin: 0 auto 30px;  padding-bottom: 22px;  border-bottom: 3px double var(--reading-blue);  text-align: left;}#post.technical-reading #post-info .post-title {  color: var(--reading-ink);  font-size: clamp(26px, 3vw, 32px);  font-weight: 700;  line-height: 1.35;}#post.technical-reading #post-meta { color: var(--reading-muted); }#post.technical-reading #article-container p { margin: 12px 0; }#post.technical-reading #article-container h2 {  margin: 42px 0 16px;  padding-bottom: 8px;  border-bottom: 1px solid var(--reading-line);  color: var(--reading-ink);  font-size: 24px;  line-height: 1.4;}#post.technical-reading #article-container h3 {  margin: 28px 0 10px;  color: var(--reading-blue);  font-size: 19px;  line-height: 1.45;}#post.technical-reading #article-container a { color: var(--reading-blue); }#post.technical-reading #article-container table { font-size: 14px; }#post.technical-reading #article-container th {  background: var(--reading-code);  color: var(--reading-ink);}#post.technical-reading #article-container th,#post.technical-reading #article-container td { border-color: var(--reading-line); }#post.technical-reading #article-container code,#post.technical-reading #article-container pre,#post.technical-reading #article-container figure.highlight {  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;  font-size: 13px;  line-height: 1.6;}#post.technical-reading #article-container :not(pre) > code {  background: var(--reading-code);  border: 1px solid var(--reading-line);  border-radius: 3px;  padding: 1px 4px;}#post.technical-reading #article-container .katex { font-size: 1.1em; }#post.technical-reading #article-container .katex-display {  margin: 20px 0;  padding: 12px 0;  overflow-x: auto;  overflow-y: hidden;}@media (max-width: 768px) {  .layout > #post.technical-reading { padding: 26px 20px; }  #post.technical-reading #article-container h2 { font-size: 22px; }  #post.technical-reading #article-container h3 { font-size: 18px; }}]]></content>
       
     </entry>
     
@@ -6257,10 +6257,10 @@
     
     <entry>
       <title></title>
-      <link href="/css/technical-reading.css"/>
-      <url>/css/technical-reading.css</url>
+      <link href="/css/notebook.css"/>
+      <url>/css/notebook.css</url>
       
-        <content type="html"><![CDATA[/* Serif typography for posts that opt in with reading_style: technical. */.layout > #post.technical-reading {  --reading-paper: #fdfcf7;  --reading-ink: #1a1a1a;  --reading-muted: #5f625f;  --reading-line: #d6d0c0;  --reading-blue: #1a4a8c;  --reading-code: #f4f1ea;  background: var(--reading-paper);  color: var(--reading-ink);}[data-theme="dark"] .layout > #post.technical-reading {  --reading-paper: #1d2529;  --reading-ink: #e7e4da;  --reading-muted: #b6b6ad;  --reading-line: #49545a;  --reading-blue: #a8c8ef;  --reading-code: #293338;}#post.technical-reading #article-container,#post.technical-reading #post-info .post-title {  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", Georgia,    "Songti SC", "STSong", serif;}#post.technical-reading #article-container {  max-width: 760px;  margin: 0 auto;  color: var(--reading-ink);  font-size: 16px;  line-height: 1.75;  letter-spacing: 0;}#post.technical-reading #post-info {  max-width: 760px;  margin: 0 auto 30px;  padding-bottom: 22px;  border-bottom: 3px double var(--reading-blue);  text-align: left;}#post.technical-reading #post-info .post-title {  color: var(--reading-ink);  font-size: clamp(26px, 3vw, 32px);  font-weight: 700;  line-height: 1.35;}#post.technical-reading #post-meta { color: var(--reading-muted); }#post.technical-reading #article-container p { margin: 12px 0; }#post.technical-reading #article-container h2 {  margin: 42px 0 16px;  padding-bottom: 8px;  border-bottom: 1px solid var(--reading-line);  color: var(--reading-ink);  font-size: 24px;  line-height: 1.4;}#post.technical-reading #article-container h3 {  margin: 28px 0 10px;  color: var(--reading-blue);  font-size: 19px;  line-height: 1.45;}#post.technical-reading #article-container a { color: var(--reading-blue); }#post.technical-reading #article-container table { font-size: 14px; }#post.technical-reading #article-container th {  background: var(--reading-code);  color: var(--reading-ink);}#post.technical-reading #article-container th,#post.technical-reading #article-container td { border-color: var(--reading-line); }#post.technical-reading #article-container code,#post.technical-reading #article-container pre,#post.technical-reading #article-container figure.highlight {  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;  font-size: 13px;  line-height: 1.6;}#post.technical-reading #article-container :not(pre) > code {  background: var(--reading-code);  border: 1px solid var(--reading-line);  border-radius: 3px;  padding: 1px 4px;}#post.technical-reading #article-container .katex { font-size: 1.1em; }#post.technical-reading #article-container .katex-display {  margin: 20px 0;  padding: 12px 0;  overflow-x: auto;  overflow-y: hidden;}@media (max-width: 768px) {  .layout > #post.technical-reading { padding: 26px 20px; }  #post.technical-reading #article-container h2 { font-size: 22px; }  #post.technical-reading #article-container h3 { font-size: 18px; }}]]></content>
+        <content type="html"><![CDATA[/* Ocean notebook: local styles, shared by all Hexo pages. */:root {  --paper: #f6f7f4;  --sheet: #fff;  --ink: #233b48;  --muted: #6a7e86;  --line: #dde7e5;  --accent: #167d8d;  --wash: #edf5f3;  --card-bg: var(--sheet);  --font-color: var(--ink);  --text-highlight-color: var(--ink);}[data-theme="dark"] {  --paper: #101f28;  --sheet: #182d37;  --ink: #dfebe9;  --muted: #a2b7bd;  --line: #2c4650;  --accent: #79c9d2;  --wash: #203e47;  --card-bg: var(--sheet);  --font-color: var(--ink);  --text-highlight-color: var(--ink);}html { scroll-behavior: smooth; scroll-padding-top: 86px; }body { background: var(--paper); color: var(--ink); }::selection { background: #b5dfda; color: #112a38; }a, button, [role="button"] { -webkit-tap-highlight-color: transparent; }a:focus-visible, button:focus-visible, input:focus-visible {  outline: 3px solid #d99a43; outline-offset: 5px; border-radius: 4px;}#page-header { background-color: #123440; }#page-header::before { background: transparent !important; }#page-header.full_page { height: auto; min-height: 540px; background-attachment: scroll; }#page-header #nav { height: 76px; padding: 0 max(32px, calc((100vw - 1320px) / 2)); box-shadow: none; }#nav .site-name { font-size: 20px; letter-spacing: .02em; }#nav .site-page { font-size: 14px; }#nav .menus_items .menus_item { padding: 0 0 0 17px; }#nav .menus_items .menus_item .site-page::after { background: #e5bf77; height: 2px; }#page-header.nav-fixed #nav { background: var(--sheet); box-shadow: 0 2px 20px #102c3810; }#page-header.nav-fixed #nav a, #page-header.nav-fixed #nav span.site-page { color: var(--ink); }#page-header.full_page #site-info {  position: relative; top: auto; margin: 0 auto; padding: 139px 48px 54px; max-width: 1320px; text-align: left;}#page-header.full_page #site-title {  text-align: left; color: #f1f6ef; font-size: clamp(32px, 3.7vw, 50px); font-weight: 650; letter-spacing: .04em; text-shadow: none;}.hero-eyebrow, .notebook-eyebrow { font-family: 'Cascadia Code', Consolas, monospace; font-size: 11px; letter-spacing: .2em; }.hero-eyebrow { color: #a1c9ca; margin-bottom: 14px; }.hero-description { color: #e7f0eb; font-size: 23px; letter-spacing: .04em; margin: 16px 0 4px; }.hero-note { max-width: 39em; color: #b4cbd0; font-size: 14px; line-height: 2; text-wrap: balance; margin: 0 0 26px; }.hero-actions { display: flex; gap: 14px; align-items: center; }.hero-actions a { padding: 10px 20px; border-radius: 7px; font-size: 14px; font-weight: 600; transition: transform .2s, background .2s; }.hero-actions a:hover { transform: translateY(-2px); }.hero-actions a.hero-primary { background: #d7eae0; color: #173e4a; }.hero-primary span { margin-left: 18px; }.hero-actions a.hero-secondary { border: 1px solid #5c838c; color: #e0efec; }.hero-actions a.hero-secondary:hover { background: #ffffff12; }.hero-caption { color: #a5c3c8; font-size: 12px; margin-top: 27px; letter-spacing: .07em; }.hero-dot { display: inline-block; width: 6px; height: 6px; margin-right: 9px; border-radius: 50%; background: #e5bf77; }#page-header #scroll-down { bottom: 13px; }#page-header #scroll-down i { font-size: 17px; animation: none; opacity: .6; }#page-header.not-home-page { height: 260px; }#page-header #page-site-info { top: 125px; }#page-header.not-home-page #site-title { font-size: 34px; letter-spacing: .05em; }#page-header.post-bg { height: 320px; }#page-header.post-bg::before { background: linear-gradient(90deg, #102c38d9, #102c3840) !important; }#page-header #post-info { bottom: 44px; }#post-info .post-title { font-size: clamp(26px, 3.3vw, 38px); line-height: 1.45; text-shadow: none; }#post-info #post-meta { color: #d2e5e5; font-size: 13px; }.layout { max-width: 1320px; padding: 40px 32px 60px; gap: 26px; }.layout > div:first-child { min-width: 0; }#aside-content { width: 270px; flex: 0 0 270px; padding-left: 0; }#recent-posts { flex: 1; width: calc(100% - 296px); }.notebook-heading { display: flex; justify-content: space-between; align-items: center; margin: 0 2px 22px; gap: 12px; }.notebook-eyebrow { color: var(--muted); font-size: 10px; }.notebook-heading h2 { margin: 0; color: var(--ink); font-size: 25px; font-weight: 600; letter-spacing: .04em; }.notebook-heading > a { color: var(--accent); font-size: 13px; border-bottom: 1px solid var(--line); }.section-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0 0 30px; border-top: 1px solid var(--line); }.section-link { display: block; min-width: 0; padding: 17px 4px; border-bottom: 1px solid var(--line); color: var(--ink); }.section-name { display: flex; gap: 10px; align-items: center; font-size: 16px; font-weight: 600; }.section-name i { color: var(--accent); width: 20px; text-align: center; flex-shrink: 0; }.section-description { display: block; margin-top: 5px; font-size: 12px; color: var(--muted); line-height: 1.8; }.section-link:hover, .section-link[aria-current="page"] { color: var(--accent); background: var(--wash); }.section-link[aria-current="page"] { border-bottom-color: var(--accent); }.section-count, .section-date { color: var(--muted); font-size: 13px; }.section-date { display: block; }.section-date time { margin-left: 6px; }#article-container .section-posts { list-style: none; padding: 0; }#article-container .section-posts li { padding: 16px 0; border-bottom: 1px solid var(--line); }.section-empty { padding: 20px 24px; background: var(--wash); border-radius: 8px; }.notes-intro { margin: 24px 0 32px; padding: 6px 0 6px 22px; border-left: 2px solid var(--accent); }.notes-intro-accessible { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }#article-container .notes-intro-lead { margin: 0 0 12px; color: var(--ink); font-family: 'Songti SC', 'STSong', 'Noto Serif CJK SC', serif; font-size: 24px; line-height: 1.8; letter-spacing: .05em; }#article-container .notes-intro-body { max-width: 34em; margin: 0; color: var(--muted); font-size: 16px; line-height: 2.1; }.notes-letter { animation: notes-ink-in 550ms ease-out both; animation-delay: var(--reveal-delay); }@keyframes notes-ink-in { from { opacity: 0; } to { opacity: 1; } }#recent-posts .recent-post-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }#recent-posts .recent-post-item {  display: block; margin: 0; width: 100%; height: auto; min-height: 215px; border: 1px solid var(--line); border-radius: 12px;  background: var(--sheet); box-shadow: 0 3px 12px #153e4803; transition: border-color .2s, box-shadow .2s, transform .2s;}#recent-posts .recent-post-item:hover { transform: translateY(-3px); border-color: #8ab6b8; box-shadow: 0 8px 24px #153e480a; }#recent-posts .recent-post-item > .recent-post-info { padding: 26px 26px 24px; width: 100%; height: auto; }.note-kicker { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 13px; font-size: 11px; color: var(--muted); }.note-level { flex-shrink: 0; color: var(--accent); background: var(--wash); padding: 2px 9px; border-radius: 4px; font-size: 11px; }.note-level[data-level="提高"], .note-level[data-level="专题"] { color: #9c6728; background: #faf1e0; }[data-theme="dark"] .note-level[data-level="提高"], [data-theme="dark"] .note-level[data-level="专题"] { color: #eac589; background: #493d2b; }#recent-posts .recent-post-item .article-title { color: var(--ink); font-size: 20px; line-height: 1.5; -webkit-line-clamp: 2; }#recent-posts .recent-post-item .article-title:hover { color: var(--accent); }#recent-posts .recent-post-item .article-meta-wrap { margin: 10px 0 0; color: var(--muted); font-size: 11px; line-height: 1.9; }#recent-posts .article-meta-wrap > .article-meta { display: none; }#recent-posts .post-meta-date .article-meta-label { margin: 0 5px; }#recent-posts .recent-post-item .content { margin-top: 14px; color: var(--muted); font-size: 13px; line-height: 1.9; -webkit-line-clamp: 3; overflow-wrap: anywhere; }#aside-content .card-widget, .layout > #page, .layout > #post, .layout > #archive, .layout > #tag, .layout > #category {  background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; box-shadow: none;}#aside-content .card-widget { padding: 22px; margin-top: 20px; }#aside-content > .card-widget:first-child { margin-top: 0; }#aside-content .card-info { background: linear-gradient(155deg, var(--wash), var(--sheet) 70%); }#aside-content .avatar-img { width: 88px; height: 88px; border: 4px solid var(--sheet); box-shadow: 0 0 0 1px var(--line); margin: 3px auto 12px; }#aside-content .author-info-name { font-size: 22px; color: var(--ink); }#aside-content .author-info-description { color: var(--muted); font-size: 13px; }[data-theme="dark"] .social-icon .fa-github { color: var(--ink) !important; }#aside-content .site-data .headline { font-size: 12px; color: var(--muted); }#aside-content .site-data .length-num { font-family: Georgia, serif; font-size: 24px; }#aside-content .card-info #card-info-btn { background: #1e6170; border-radius: 6px; font-size: 13px; padding: 7px 0; }#aside-content .item-headline { font-size: 15px; font-weight: 600; }#aside-content .item-headline i { color: var(--accent); }#aside-content .aside-list-item .content .title { font-size: 13px; line-height: 1.7; }#aside-content .aside-list-item .content time { font-size: 11px; color: var(--muted); }.layout > #page, .layout > #post { padding: 38px 42px; }#article-container { line-height: 1.95; overflow-wrap: break-word; font-size: 16px; }#article-container h1, #article-container h2, #article-container h3 { color: var(--ink); letter-spacing: .01em; }#article-container h2 { margin: 1.8em 0 .8em; padding-bottom: .4em; border-bottom: 1px solid var(--line); font-size: 1.5em; }#article-container a { color: var(--accent); }#article-container blockquote { border-left: 3px solid var(--accent); background: var(--wash); color: var(--muted); border-radius: 0 8px 8px 0; padding: 12px 18px; font-size: 14px; }#article-container figure.highlight { border-radius: 9px; margin: 22px 0; font-size: 13px; }#article-container pre { tab-size: 4; }#article-container .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding: 8px 0; }#article-container table { font-size: 14px; }.acm-notebook #article-container > ul:first-of-type { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }.acm-notebook #article-container > ul:first-of-type li { margin: 0; }.acm-notebook #article-container > ul:first-of-type a { display: block; background: var(--wash); border: 1px solid var(--line); padding: 5px 12px; border-radius: 6px; font-size: 13px; }.acm-notebook #article-container > ul:not(:first-of-type) { padding-left: 22px; }.acm-notebook #article-container > ul:not(:first-of-type) li { margin: 6px 0; font-size: 14px; color: var(--muted); }#pagination { margin-top: 30px; }#pagination .page-number, #pagination .extend { border-radius: 6px; box-shadow: none; }#pagination .page-number.current { background: #1e6170; }#footer { background: #102e3a; margin-top: 12px; }#footer-wrap { color: #b6ced1; padding: 32px 20px; font-size: 12px; line-height: 2; }#footer-wrap a { color: #d9e9e5; }#rightside > div > button, #rightside > div > a { border-radius: 7px; background: #1e6170; }#local-search .search-dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--sheet); }#local-search .search-dialog-title, #local-search .search-result-title { color: var(--accent); }#links .link-navigation { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }#links .link-navigation::after { display: none; }#links .link-navigation .card { width: 100%; margin: 0; padding: 20px; border: 1px solid var(--line); border-radius: 10px; float: none; background: var(--wash); }#links .link-navigation .card:hover { transform: translateY(-3px); }#links .card .card-header .info { white-space: normal; color: var(--muted); }#links .card .card-header a { color: var(--accent); }@media (min-width: 1500px) { #page-header.full_page { background-size: cover; } }@media (max-width: 1100px) {  #page-header #nav { padding: 0 24px; }  #nav .menus_items .menus_item { padding-left: 11px; }  #page-header.full_page #site-info { padding-left: 32px; }  #aside-content { width: 240px; flex-basis: 240px; }  .layout { padding: 30px 24px 48px; gap: 20px; }  #recent-posts .recent-post-item > .recent-post-info { padding: 21px; }  #recent-posts .recent-post-items { gap: 16px; }  .layout > #page, .layout > #post { padding: 30px; }}@media (max-width: 900px) and (min-width: 769px) {  #recent-posts .recent-post-items { grid-template-columns: 1fr; }  #recent-posts .recent-post-item { min-height: 0; }}@media (max-width: 768px) {  .section-nav { gap: 0 14px; }  .section-name { font-size: 14px; gap: 6px; }  .section-description { font-size: 11px; }  #page-header.full_page { min-height: 485px; background-position: 66% center; }  #page-header.full_page::before { background: linear-gradient(90deg, #112c38ef, #112c3899) !important; }  #page-header #nav { height: 64px; padding: 0 20px; }  #nav .site-name { font-size: 18px; }  #page-header.full_page #site-info { padding: 121px 25px 28px; }  #page-header.full_page #site-title { font-size: 34px; }  .hero-description { font-size: 19px; margin-top: 18px; }  .hero-note { font-size: 12px; margin-top: 5px; margin-bottom: 24px; }  .notes-intro { padding-left: 16px; }  #article-container .notes-intro-lead { font-size: 21px; }  #article-container .notes-intro-body { font-size: 15px; }  .hero-eyebrow { font-size: 9px; letter-spacing: .16em; }  .hero-actions { gap: 10px; }  .hero-actions a { padding: 9px 13px; font-size: 12px; }  .hero-primary span { margin-left: 10px; }  .hero-caption { font-size: 11px; margin-top: 26px; }  #page-header.not-home-page { height: 220px; }  #page-header #page-site-info { top: 110px; }  #page-header.not-home-page #site-title { font-size: 28px; }  #page-header.post-bg { height: 300px; }  #page-header #post-info { bottom: 28px; padding: 0 8px; }  #post-info .post-title { font-size: 26px; }  #post-info #post-meta { font-size: 11px; }  .layout { padding: 26px 16px 36px; gap: 22px; }  #recent-posts { width: 100%; }  #recent-posts .recent-post-items { grid-template-columns: 1fr; gap: 15px; }  #recent-posts .recent-post-item { min-height: 0; }  #recent-posts .recent-post-item > .recent-post-info { padding: 22px; }  #recent-posts .recent-post-item .article-title { font-size: 21px; }  .notebook-heading { margin-bottom: 18px; }  .notebook-heading h2 { font-size: 23px; }  .notebook-heading > a { font-size: 12px; }  #aside-content { width: 100%; flex-basis: auto; }  .layout > #page, .layout > #post { padding: 25px 21px; }  #article-container { font-size: 15px; }  #links .link-navigation { grid-template-columns: 1fr; }}@media (prefers-reduced-motion: reduce) {  html { scroll-behavior: auto; }  .notes-letter { animation: none; }  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }}]]></content>
       
     </entry>
     
