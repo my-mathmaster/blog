@@ -77,6 +77,19 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .notebook-eyebrow { color: var(--muted); font-size: 10px; }
 .notebook-heading h2 { margin: 0; color: var(--ink); font-size: 25px; font-weight: 600; letter-spacing: .04em; }
 .notebook-heading > a { color: var(--accent); font-size: 13px; border-bottom: 1px solid var(--line); }
+.section-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin: 0 0 30px; border-top: 1px solid var(--line); }
+.section-link { display: block; min-width: 0; padding: 17px 4px; border-bottom: 1px solid var(--line); color: var(--ink); }
+.section-name { display: flex; gap: 10px; align-items: center; font-size: 16px; font-weight: 600; }
+.section-name i { color: var(--accent); width: 20px; text-align: center; flex-shrink: 0; }
+.section-description { display: block; margin-top: 5px; font-size: 12px; color: var(--muted); line-height: 1.8; }
+.section-link:hover, .section-link[aria-current="page"] { color: var(--accent); background: var(--wash); }
+.section-link[aria-current="page"] { border-bottom-color: var(--accent); }
+.section-count, .section-date { color: var(--muted); font-size: 13px; }
+.section-date { display: block; }
+.section-date time { margin-left: 6px; }
+#article-container .section-posts { list-style: none; padding: 0; }
+#article-container .section-posts li { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.section-empty { padding: 20px 24px; background: var(--wash); border-radius: 8px; }
 #recent-posts .recent-post-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 #recent-posts .recent-post-item {
   display: block; margin: 0; width: 100%; height: auto; min-height: 215px; border: 1px solid var(--line); border-radius: 12px;
@@ -157,6 +170,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   #recent-posts .recent-post-item { min-height: 0; }
 }
 @media (max-width: 768px) {
+  .section-nav { gap: 0 14px; }
+  .section-name { font-size: 14px; gap: 6px; }
+  .section-description { font-size: 11px; }
   #page-header.full_page { height: 485px; background-position: 66% center; }
   #page-header.full_page::before { background: linear-gradient(90deg, #112c38ef, #112c3899) !important; }
   #page-header #nav { height: 64px; padding: 0 20px; }
