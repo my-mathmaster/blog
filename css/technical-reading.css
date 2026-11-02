@@ -1,0 +1,94 @@
+/* Serif typography for posts that opt in with reading_style: technical. */
+.layout > #post.technical-reading {
+  --reading-paper: #fdfcf7;
+  --reading-ink: #1a1a1a;
+  --reading-muted: #5f625f;
+  --reading-line: #d6d0c0;
+  --reading-blue: #1a4a8c;
+  --reading-code: #f4f1ea;
+  background: var(--reading-paper);
+  color: var(--reading-ink);
+}
+[data-theme="dark"] .layout > #post.technical-reading {
+  --reading-paper: #1d2529;
+  --reading-ink: #e7e4da;
+  --reading-muted: #b6b6ad;
+  --reading-line: #49545a;
+  --reading-blue: #a8c8ef;
+  --reading-code: #293338;
+}
+#post.technical-reading #article-container,
+#post.technical-reading #post-info .post-title {
+  font-family: "Source Serif Pro", "Source Serif 4", "Crimson Pro", Georgia,
+    "Songti SC", "STSong", serif;
+}
+#post.technical-reading #article-container {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--reading-ink);
+  font-size: 16px;
+  line-height: 1.75;
+  letter-spacing: 0;
+}
+#post.technical-reading #post-info {
+  max-width: 760px;
+  margin: 0 auto 30px;
+  padding-bottom: 22px;
+  border-bottom: 3px double var(--reading-blue);
+  text-align: left;
+}
+#post.technical-reading #post-info .post-title {
+  color: var(--reading-ink);
+  font-size: clamp(26px, 3vw, 32px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+#post.technical-reading #post-meta { color: var(--reading-muted); }
+#post.technical-reading #article-container p { margin: 12px 0; }
+#post.technical-reading #article-container h2 {
+  margin: 42px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--reading-line);
+  color: var(--reading-ink);
+  font-size: 24px;
+  line-height: 1.4;
+}
+#post.technical-reading #article-container h3 {
+  margin: 28px 0 10px;
+  color: var(--reading-blue);
+  font-size: 19px;
+  line-height: 1.45;
+}
+#post.technical-reading #article-container a { color: var(--reading-blue); }
+#post.technical-reading #article-container table { font-size: 14px; }
+#post.technical-reading #article-container th {
+  background: var(--reading-code);
+  color: var(--reading-ink);
+}
+#post.technical-reading #article-container th,
+#post.technical-reading #article-container td { border-color: var(--reading-line); }
+#post.technical-reading #article-container code,
+#post.technical-reading #article-container pre,
+#post.technical-reading #article-container figure.highlight {
+  font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+#post.technical-reading #article-container :not(pre) > code {
+  background: var(--reading-code);
+  border: 1px solid var(--reading-line);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+#post.technical-reading #article-container .katex { font-size: 1.1em; }
+#post.technical-reading #article-container .katex-display {
+  margin: 20px 0;
+  padding: 12px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+@media (max-width: 768px) {
+  .layout > #post.technical-reading { padding: 26px 20px; }
+  #post.technical-reading #article-container h2 { font-size: 22px; }
+  #post.technical-reading #article-container h3 { font-size: 18px; }
+}
