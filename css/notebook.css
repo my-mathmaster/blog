@@ -90,6 +90,12 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 #article-container .section-posts { list-style: none; padding: 0; }
 #article-container .section-posts li { padding: 16px 0; border-bottom: 1px solid var(--line); }
 .section-empty { padding: 20px 24px; background: var(--wash); border-radius: 8px; }
+.notes-intro { margin: 24px 0 32px; padding: 6px 0 6px 22px; border-left: 2px solid var(--accent); }
+.notes-intro-accessible { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+#article-container .notes-intro-lead { margin: 0 0 12px; color: var(--ink); font-family: 'Songti SC', 'STSong', 'Noto Serif CJK SC', serif; font-size: 24px; line-height: 1.8; letter-spacing: .05em; }
+#article-container .notes-intro-body { max-width: 34em; margin: 0; color: var(--muted); font-size: 16px; line-height: 2.1; }
+.notes-letter { animation: notes-ink-in 550ms ease-out both; animation-delay: var(--reveal-delay); }
+@keyframes notes-ink-in { from { opacity: 0; } to { opacity: 1; } }
 #recent-posts .recent-post-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 #recent-posts .recent-post-item {
   display: block; margin: 0; width: 100%; height: auto; min-height: 215px; border: 1px solid var(--line); border-radius: 12px;
@@ -181,6 +187,9 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   #page-header.full_page #site-title { font-size: 34px; }
   .hero-description { font-size: 19px; margin-top: 18px; }
   .hero-note { font-size: 12px; margin-top: 5px; margin-bottom: 24px; }
+  .notes-intro { padding-left: 16px; }
+  #article-container .notes-intro-lead { font-size: 21px; }
+  #article-container .notes-intro-body { font-size: 15px; }
   .hero-eyebrow { font-size: 9px; letter-spacing: .16em; }
   .hero-actions { gap: 10px; }
   .hero-actions a { padding: 9px 13px; font-size: 12px; }
@@ -209,5 +218,6 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .notes-letter { animation: none; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
