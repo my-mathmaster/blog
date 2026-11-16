@@ -1,0 +1,468 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f6f7f4"><meta name="description" content="从同一间办公室和两间办公室的协作说起，看懂单机多卡、跨节点通信、TCP Socket 与 RDMA，再解释一次训练整步耗时减半的实测。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA">
+<meta property="og:url" content="https://blog.afywty.top/posts/1d3e71a4.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="从同一间办公室和两间办公室的协作说起，看懂单机多卡、跨节点通信、TCP Socket 与 RDMA，再解释一次训练整步耗时减半的实测。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.afywty.top/img/ocean-notes.svg?8500">
+<meta property="article:published_time" content="2026-11-16T11:43:00.000Z">
+<meta property="article:modified_time" content="2026-11-15T16:00:00.000Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="分布式训练">
+<meta property="article:tag" content="NCCL">
+<meta property="article:tag" content="RDMA">
+<meta property="article:tag" content="工程复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.afywty.top/img/ocean-notes.svg?8500"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA",
+  "url": "https://blog.afywty.top/posts/1d3e71a4.html",
+  "image": "https://blog.afywty.top/img/ocean-notes.svg?8500",
+  "datePublished": "2026-11-16T11:43:00.000Z",
+  "dateModified": "2026-11-15T16:00:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/1d3e71a4.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#101f28')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f7f4')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><link rel="stylesheet" href="/css/technical-reading.css?v=20261102"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/notebook.css?v=20261103-home-sections"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">219</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/acm/"><i class="fa-fw fas fa-code"></i><span> ACM</span></a></div><div class="menus_item"><a class="site-page" href="/llm/"><i class="fa-fw fas fa-brain"></i><span> LLM</span></a></div><div class="menus_item"><a class="site-page" href="/notes/"><i class="fa-fw fas fa-headphones"></i><span> 沿途拾记</span></a></div><div class="menus_item"><a class="site-page" href="/thoughts/"><i class="fa-fw fas fa-pen-nib"></i><span> 我的杂谈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/acm/"><i class="fa-fw fas fa-code"></i><span> ACM</span></a></div><div class="menus_item"><a class="site-page" href="/llm/"><i class="fa-fw fas fa-brain"></i><span> LLM</span></a></div><div class="menus_item"><a class="site-page" href="/notes/"><i class="fa-fw fas fa-headphones"></i><span> 沿途拾记</span></a></div><div class="menus_item"><a class="site-page" href="/thoughts/"><i class="fa-fw fas fa-pen-nib"></i><span> 我的杂谈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div class="technical-reading" id="post"><div id="post-info"><h1 class="post-title">GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-16T11:43:00.000Z" title="发表于 2026-11-16 19:43:00">2026-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-15T16:00:00.000Z" title="更新于 2026-11-16 00:00:00">2026-11-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/">LLM</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/">模型训练</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-11-16 00:00:00&quot;}" hidden></div><p>同样的模型、同样的 16 张 GPU，一步训练从约 <strong>393 秒缩短到 197 秒</strong>。变化发生在两台机器之间：补齐通信依赖后，跨节点的数据传输从 TCP Socket 切换到了 RDMA。</p>
+<p>最有意思的是，并非每个阶段都快了一倍。生成回答从 86.4 秒变成 81.9 秒，变化不大；参数更新却从 212.5 秒缩短到了 69.8 秒。</p>
+<p>为什么会这样？要读懂这组数字，可以先把训练想成一群人合作做题：<strong>人手决定能同时算多少，协作方式决定要等多久。</strong></p>
+<p>本文从“节点是什么”开始，逐步解释多卡训练为什么需要通信，再回到这次实测。这里的测速比较始终是<strong>两节点 16 卡的 Socket 与 RDMA</strong>；单节点部分用于讲原理，没有对应的单节点速度对照。</p>
+<span id="more"></span>
+<h2 id="1-一张-GPU、一台机器和一个任务，分别是什么">1. 一张 GPU、一台机器和一个任务，分别是什么</h2>
+<h3 id="1-1-GPU-是计算者，节点是它所在的机器">1.1 GPU 是计算者，节点是它所在的机器</h3>
+<p>GPU 很擅长同时进行大量相似的数值计算。训练大模型时，许多矩阵运算交给它完成。</p>
+<p>一台服务器可以安装多张 GPU。在本文的训练场景里，把这样一台服务器称为一个<strong>节点</strong>。GPU 自己的存储空间叫<strong>显存</strong>，模型参数和计算中的临时数据会占用它。</p>
+<p>可以把一个节点想成一间办公室，一张 GPU 想成一位计算者。于是：</p>
+<table>
+<thead>
+<tr>
+<th>说法</th>
+<th>实际意思</th>
+<th>办公室类比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单节点单卡</td>
+<td>一台机器，用一张 GPU</td>
+<td>一间办公室，一人做题</td>
+</tr>
+<tr>
+<td>单节点多卡</td>
+<td>一台机器，多张 GPU 合作</td>
+<td>一间办公室，多人合作</td>
+</tr>
+<tr>
+<td>多节点多卡</td>
+<td>多台机器中的 GPU 合作</td>
+<td>多间办公室，一起完成同一份任务</td>
+</tr>
+</tbody>
+</table>
+<p><strong>单节点不等于单卡。</strong> 一台装了 8 张 GPU 的机器，仍然是单节点。</p>
+<h3 id="1-2-两台机器都在跑，也可能是两个独立实验">1.2 两台机器都在跑，也可能是两个独立实验</h3>
+<p>有两台各装 8 张 GPU 的机器，可以让它们一起训练一个模型，也可以各自跑一个实验。</p>
+<p><img src="/img/multinode-rdma/topology.svg" alt="单节点、两个独立任务与两节点联合训练的关系图"></p>
+<p>图中每组只画两张卡，表示“多卡”，不表示本次实验的实际卡数。</p>
+<p>如果机器 A 试学习率甲，机器 B 试学习率乙，它们无需为这两个独立训练任务相互同步梯度。这样可能更早得到两个实验结果，却没有让其中任何一个实验自动获得 16 卡的协作能力。</p>
+<p>只有两台机器加入<strong>同一个分布式训练任务</strong>，共同完成计算和必要的同步，才是这里讨论的多节点联合训练。</p>
+<h2 id="2-GPU-之间，到底在传什么">2. GPU 之间，到底在传什么</h2>
+<h3 id="2-1-模型训练需要把各自的计算结果汇总">2.1 模型训练需要把各自的计算结果汇总</h3>
+<p>模型可以粗略理解为一套带着许多可调数字的计算规则。这些数字叫<strong>参数</strong>。训练就是根据样本的表现，逐步修改参数。</p>
+<p>以一种常见的方式——<strong>数据并行</strong>——为例：各张 GPU 拿着同一版模型，分别处理不同样本，算出“参数应该往哪个方向调整”。这个调整信号叫<strong>梯度</strong>。</p>
+<p>接下来，它们要把梯度汇总，才能让各份模型按一致的结果更新。如果每张卡只按自己的样本一直改下去，模型就会逐渐分叉。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GPU A：处理一部分样本 → 算出梯度 ─┐</span><br><span class="line">                               ├→ 汇总梯度 → 各自更新模型</span><br><span class="line">GPU B：处理另一部分样本 → 算出梯度 ─┘</span><br></pre></td></tr></table></figure>
+<p>常见的汇总操作叫 <strong>AllReduce</strong>：大家贡献数据，进行求和等运算，再让参与者都拿到汇总结果。框架还会按训练配置做归一化。在 PyTorch 的 DDP 数据并行实现中，梯度通信可以和一部分反向计算重叠进行。<a target="_blank" rel="noopener" href="https://docs.pytorch.org/docs/2.9/notes/ddp.html">PyTorch DDP 原理</a></p>
+<h3 id="2-2-模型拆开存，还会产生其他通信">2.2 模型拆开存，还会产生其他通信</h3>
+<p>模型大了，完整的参数、梯度和优化器状态可能很占显存。<strong>优化器状态</strong>可以理解为训练时记下的辅助信息，用来决定下一次怎样调整参数。</p>
+<p>有些训练方法会把这些内容拆到不同 GPU 上存放。比如 FSDP，也就是“全分片数据并行”：需要某部分参数时收集它们，算完后再按规则分散保存；梯度也需要汇总和分发。它减少单卡的存储压力，同时引入相应的数据交换。<a target="_blank" rel="noopener" href="https://docs.pytorch.org/docs/2.9/fsdp.html">PyTorch FSDP 说明</a></p>
+<p>所以，多卡训练中的通信可能发生在计算前、计算中和计算后。实际传多少、什么时候传，取决于并行方式，不能把所有训练都理解成“最后同步一次”。</p>
+<p>在 NVIDIA GPU 训练中，常会见到 <strong>NCCL</strong>。它是一套负责 GPU 间通信的库，提供 AllReduce、AllGather 等操作，并支持单机与跨机器的多种连接方式。你通常不必自己写网络收发代码，训练框架会调用它。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/nccl/archives/nccl_2275/user-guide/docs/overview.html">NCCL 概览</a></p>
+<h2 id="3-从一台机器到两台机器，多出来的时间在哪里">3. 从一台机器到两台机器，多出来的时间在哪里</h2>
+<h3 id="3-1-同机有内部连接，跨机要经过网络">3.1 同机有内部连接，跨机要经过网络</h3>
+<p>同一个节点内，GPU 之间可能通过 PCIe、NVLink 等内部连接交换数据。跨节点后，数据还要经过网卡以及节点间的网络。同机连接的实际速度也取决于硬件拓扑，不能只凭“在同一台机器里”就认定通信很快。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/nccl/archives/nccl_2275/user-guide/docs/overview.html">NCCL 支持的互连方式</a></p>
+<p>回到办公室的类比：大家坐在一起时可以在办公室内部传材料；分到两间办公室后，还需要安排两边的传递。</p>
+<p>GPU 多了，每张卡分到的计算可能减少，但需要交换的信息不一定按同样比例减少。有时某些卡已经算完，还得等数据或等其他卡。</p>
+<h3 id="3-2-带宽和延迟，是两个不同问题">3.2 带宽和延迟，是两个不同问题</h3>
+<p><strong>带宽</strong>表示每秒能传多少数据，像道路一次能容纳多少货物；<strong>延迟</strong>表示一次通信启动并送达需要多久，像一趟配送的起步时间。</p>
+<p>大块数据传输更容易受带宽影响，大量频繁的小通信更容易受延迟影响。训练还会受到负载不均衡、数据准备和保存等因素影响。</p>
+<p>理解一步训练的耗时，可以先用这个简化式子：</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>T</mi><mtext>step</mtext></msub><mo>≈</mo><msub><mi>T</mi><mtext>compute</mtext></msub><mo>+</mo><msub><mi>T</mi><mtext>exposed comm</mtext></msub><mo>+</mo><msub><mi>T</mi><mtext>other</mtext></msub></mrow><annotation encoding="application/x-tex">T_{\text{step}} \approx T_{\text{compute}} + T_{\text{exposed comm}} + T_{\text{other}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.28055599999999997em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">step</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.28055599999999997em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">compute</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">exposed comm</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">other</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></p>
+<p>这里的三项分别是计算、<strong>没能被计算掩盖的通信等待</strong>，以及其他开销。因为通信和计算可能重叠，不能把日志里所有通信时长直接加到计算时长上。</p>
+<p>举个纯教学例子：某一步原先计算要 100 秒。增加 GPU 后，计算降到 50 秒，如果额外等待只有 10 秒，总共约 60 秒；如果额外等待达到 80 秒，总共就成了 130 秒。<strong>这组数字只是解释原理，不是本文的单节点实测。</strong></p>
+<p>因此，“GPU 数量翻倍”并不自动等于“耗时减半”。能分出去多少计算，以及分出去以后要多等多久，都需要测量。</p>
+<h2 id="4-TCP-Socket-与-RDMA：数据怎么到另一台机器">4. TCP Socket 与 RDMA：数据怎么到另一台机器</h2>
+<h3 id="4-1-TCP-Socket-是常见的网络传输路径">4.1 TCP Socket 是常见的网络传输路径</h3>
+<p>TCP 是一种提供可靠、有序字节传输的网络协议；Socket 是程序使用网络的一类接口。在本文中，<strong>TCP Socket</strong>指 NCCL 的 Socket 网络后端。<a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc9293.html#section-2.2">TCP 协议规范</a></p>
+<p>它通常通过操作系统的 TCP/IP 网络栈收发数据。网络栈可以理解为操作系统中负责处理网络通信的一套软件。CPU 要参与协议处理；在常见的 GPU Socket 传输路径中，还会通过主机内存中转 GPU 数据。</p>
+<p>TCP Socket 的可用性很好，很多普通网络环境就能跑起来。但面对频繁、大量的 GPU 数据交换，协议处理、内存中转及网络本身都可能成为成本。这不意味着所有 TCP 网络都慢，具体结果还受网卡、CPU、网络配置和负载影响。</p>
+<h3 id="4-2-RDMA-让网卡承担更多数据搬运">4.2 RDMA 让网卡承担更多数据搬运</h3>
+<p><strong>RDMA</strong> 全称是 Remote Direct Memory Access，中文叫“远程直接内存访问”。</p>
+<p>通信双方先准备好允许访问的内存区域，之后由支持 RDMA 的网卡完成更多数据搬运工作，减少常规内核网络栈和 CPU 在数据传输路径上的处理。它仍然需要软件建立连接、注册内存和管理任务，不能理解成“CPU 从此完全不参与”。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/kubernetes25100/index.html#networking-features">NVIDIA 的 RDMA 功能说明</a></p>
+<p><strong>普通 RDMA 与 GPU 显存直传还要分开看。</strong> GPUDirect RDMA 在兼容的硬件和驱动条件下，为 GPU 与网卡提供直接交换数据的路径，从而减少经主机内存中转的需要。日志中常把它缩写为 <strong>GDRDMA</strong>。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/gpudirect-rdma/index.html">GPUDirect RDMA 官方说明</a></p>
+<p><img src="/img/multinode-rdma/transport.svg" alt="常见 GPU TCP Socket 路径与 GPUDirect RDMA 路径的简化示意"></p>
+<p>图只展示数据传输的关键环节，省略了实际拓扑、缓冲区和协议细节；它不是对所有机器实现的逐层描述。</p>
+<p>用办公室的比喻说，RDMA 让材料传递有了更直接的通道，减少中间处理。计算题目本身的工作量依然存在。</p>
+<h3 id="4-3-RDMA、InfiniBand、RoCE-和-NCCL，不是同一层的名词">4.3 RDMA、InfiniBand、RoCE 和 NCCL，不是同一层的名词</h3>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>可以怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NCCL</td>
+<td>训练框架调用的 GPU 通信库，负责组织数据交换</td>
+</tr>
+<tr>
+<td>TCP Socket</td>
+<td>本文对照中使用的常规 TCP/IP 传输路径</td>
+</tr>
+<tr>
+<td>RDMA</td>
+<td>让网卡直接访问已准备好的远端内存区域的通信能力</td>
+</tr>
+<tr>
+<td>InfiniBand</td>
+<td>可承载 RDMA 的网络技术</td>
+</tr>
+<tr>
+<td>RoCE</td>
+<td>在以太网上实现 RDMA 的技术，英文为 RDMA over Converged Ethernet</td>
+</tr>
+<tr>
+<td>GPUDirect RDMA</td>
+<td>GPU 与网卡直接交换数据的能力</td>
+</tr>
+</tbody>
+</table>
+<p>RDMA 可以运行在 InfiniBand 或 RoCE 等网络上。NCCL 内置的 <code>IB</code> 后端使用通用的 IB Verbs 接口，也用于 RoCE。因此，日志里出现 <code>Using network IB</code>，不能仅凭这个名字认定物理网络就是 InfiniBand。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/networking/display/kubernetes25100/index.html#networking-features">NVIDIA RDMA 网络说明</a> · <a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/nccl/archives/nccl_2275/user-guide/docs/env.html#nccl-net">NCCL 网络后端与 IB/RoCE 设置</a></p>
+<h2 id="5-这次实测：同样-16-张卡，时间省在哪里">5. 这次实测：同样 16 张卡，时间省在哪里</h2>
+<h3 id="5-1-先把比较条件说清楚">5.1 先把比较条件说清楚</h3>
+<p>这次使用两台各有 8 张 H20 的节点，共 16 张 GPU，运行 Qwen3-8B 的一次 GRPO 训练步骤。</p>
+<p>GRPO 可以先理解为一种“让模型对同一道题生成多个回答，根据表现调整模型”的训练方法。一次训练步骤会包含生成、计算训练所需的概率、更新参数，以及让生成引擎拿到新参数等阶段。</p>
+<p><strong>Checkpoint</strong> 是训练存档。这里两次都从同一个存档恢复模型、优化器等状态，处理同一批 126 道题，每题生成 8 个回答，总计 1008 条回答。126 是全局题数，1008 是全局回答数，不会再乘以 16 张卡。</p>
+<table>
+<thead>
+<tr>
+<th>对照条件</th>
+<th>本次做法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>硬件与模型</td>
+<td>相同的两节点 16 张 H20，Qwen3-8B</td>
+</tr>
+<tr>
+<td>起点</td>
+<td>同一个 16 卡训练 checkpoint，恢复后执行第 2 步</td>
+</tr>
+<tr>
+<td>输入</td>
+<td>同一批 126 题；输入与标准答案的多重集合校验一致</td>
+</tr>
+<tr>
+<td>采样数量</td>
+<td>每题 8 答，两次各 1008 条</td>
+</tr>
+<tr>
+<td>软件变化</td>
+<td>保留原 NCCL 2.27.5，补齐隔离目录中的 RDMA 用户态依赖，切换通信路径</td>
+</tr>
+<tr>
+<td>整步计时</td>
+<td>两边都扣除 checkpoint 保存时间</td>
+</tr>
+</tbody>
+</table>
+<p>“多重集合一致”表示题目及其出现次数一致，允许记录顺序不同。训练会按回答长度重新分配样本，因此只比较文件中同一行，可能误以为输入变了。</p>
+<p>下面的数字来自 2026-11-16 的单步对照。公开的<a href="/data/multinode-rdma-20261116.json">测量摘要 JSON</a>保留原始计时数值、样本口径与限制，去除了内部机器地址和文件路径。</p>
+<h3 id="5-2-各阶段耗时">5.2 各阶段耗时</h3>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>在做什么</th>
+<th style="text-align:right">TCP Socket</th>
+<th style="text-align:right">RDMA</th>
+<th style="text-align:right">速度比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>生成回答</td>
+<td>让模型完成这一批回答</td>
+<td style="text-align:right">86.4 秒</td>
+<td style="text-align:right">81.9 秒</td>
+<td style="text-align:right">1.05×</td>
+</tr>
+<tr>
+<td>计算旧策略概率</td>
+<td>计算更新所需的原模型概率</td>
+<td style="text-align:right">82.4 秒</td>
+<td style="text-align:right">41.0 秒</td>
+<td style="text-align:right">2.01×</td>
+</tr>
+<tr>
+<td>参数更新</td>
+<td>根据这一批回答的训练信号更新模型</td>
+<td style="text-align:right">212.5 秒</td>
+<td style="text-align:right">69.8 秒</td>
+<td style="text-align:right">3.04×</td>
+</tr>
+<tr>
+<td>同步生成权重</td>
+<td>让生成引擎拿到更新后的参数</td>
+<td style="text-align:right">10.2 秒</td>
+<td style="text-align:right">2.6 秒</td>
+<td style="text-align:right">3.88×</td>
+</tr>
+<tr>
+<td><strong>整步，不含保存</strong></td>
+<td><strong>这一完整训练步骤</strong></td>
+<td style="text-align:right"><strong>392.8 秒</strong></td>
+<td style="text-align:right"><strong>196.5 秒</strong></td>
+<td style="text-align:right"><strong>2.00×</strong></td>
+</tr>
+</tbody>
+</table>
+<p>速度比用 Socket 耗时除以 RDMA 耗时，按未四舍五入的记录计算。表中列出了主要阶段，整步还包含少量其他工作，因此不要求前四行恰好相加等于总计。</p>
+<p><img src="/img/multinode-rdma/timings.svg" alt="相同两节点 16 卡配置下，Socket 与 RDMA 各阶段耗时的对比柱状图"></p>
+<p>柱子越短表示耗时越少；“整步”是总计，不是要与其他行相加的第五个阶段。图表没有重复试验的误差条，因为目前每种配置只有这一次对照观测。</p>
+<p>整体速度约为原来的 2 倍，等价于<strong>耗时减少约 50%</strong>。参数更新的速度约为原来的 3.04 倍，等价于耗时减少约 67%。用这两种说法，能避开“快了几倍”的歧义。</p>
+<h3 id="5-3-为什么生成只快一点，参数更新却快很多">5.3 为什么生成只快一点，参数更新却快很多</h3>
+<p>从记录看，最大的绝对节省来自参数更新：少用了约 143 秒。生成阶段只少了约 4.5 秒。</p>
+<p>这与“通信开销较大的阶段更容易从 RDMA 获益”的预期一致。参数更新阶段除了计算，还会按并行策略交换梯度或参数；同步生成权重本身也涉及参数传递。</p>
+<p><strong>这是结合耗时变化与通信机制做出的解释。</strong> 当前记录没有把每一秒都归因到具体通信操作，不能据此声称已经精确测出了通信占比。</p>
+<p>生成阶段在这套配置下变化小，也不意味着“生成完全不通信”。如果把一次推理的模型计算拆到多个节点，生成也可能非常依赖网络。瓶颈取决于具体的模型与部署方式。</p>
+<h2 id="6-这次为什么没有一开始就用上-RDMA">6. 这次为什么没有一开始就用上 RDMA</h2>
+<h3 id="6-1-有网卡、开了开关，还差中间的软件">6.1 有网卡、开了开关，还差中间的软件</h3>
+<p>这次环境能够看到 RDMA 设备，也设置了 <code>NCCL_IB_DISABLE=0</code>，训练可以正常运行。但容器里缺少 <code>libibverbs.so.1</code> 和 mlx5 的用户态 provider。</p>
+<p>可以把 <code>libibverbs</code> 理解为程序使用 RDMA 设备的一层接口库，把 provider 理解为连接这层接口与具体网卡实现的适配组件。硬件在场，软件链路仍然可能没有接通。</p>
+<p>补齐这些依赖后，我们保留原版 NCCL，把新增库放在独立目录，只对相关任务设置加载路径。随后先做跨节点通信检查，再从真实 checkpoint 恢复并完成一步训练。</p>
+<p>这说明，“任务能跑”与“正在使用期望的高速通信路径”是两个都需要确认的事实。</p>
+<h3 id="6-2-看实际传输记录，并区分初始化与训练数据">6.2 看实际传输记录，并区分初始化与训练数据</h3>
+<p>NCCL 的几个名字容易让人误判：</p>
+<table>
+<thead>
+<tr>
+<th>看到的信息</th>
+<th>可以说明什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NCCL_IB_DISABLE=0</code></td>
+<td>没有通过这个开关禁用 IB/RoCE，不保证实际选中了它</td>
+</tr>
+<tr>
+<td><code>NCCL_NET=IB</code></td>
+<td>要求使用名为 IB 的网络后端；本次用它避免静默退回 Socket</td>
+</tr>
+<tr>
+<td><code>Using network IB</code></td>
+<td>该通信组选择了 IB 后端，还要结合实际连接记录</td>
+</tr>
+<tr>
+<td><code>NET/IB/.../GDRDMA</code></td>
+<td>在本次版本的连接日志中，表明相应连接使用 GPUDirect RDMA</td>
+</tr>
+</tbody>
+</table>
+<p>设置的含义以对应版本的 <a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/nccl/archives/nccl_2275/user-guide/docs/env.html">NCCL 环境变量说明</a>为准。<code>NCCL_NET=IB</code> 不会补齐缺失依赖，也不自动保证 GPU 显存直传；在不支持的环境中，强制选择它可能直接报错。</p>
+<p>还有一个细节：<strong>RDMA 任务仍可能用 TCP 交换初始化连接信息。</strong> 因此，不能在日志中搜索到一次 <code>Socket</code> 或 TCP，就断定训练数据走了 Socket；应区分 bootstrap 等初始化记录与实际数据传输连接。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/nccl/archives/nccl_2275/user-guide/docs/troubleshooting.html#ip-ports">NCCL 关于 TCP 连接信息交换的说明</a></p>
+<p>本次真实模型步骤的 16 个 rank 都有 IB/GDRDMA 连接证据，并且没有 NCCL 警告。<strong>Rank</strong> 就是分布式任务中一个参与进程的编号；本次每张 GPU 对应一个 rank，共编号 0 到 15。</p>
+<p>如果手边已有打开详细日志后保存的 NCCL 文件，可以先筛选这些关键词，再按进程与连接上下文检查：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rg <span class="string">&#x27;Using network|NET/IB|GDRDMA|NET/Socket|NCCL WARN&#x27;</span> nccl-*.<span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<p>这条命令只是帮助阅读已有日志，不替代通信测试，也不负责开启 RDMA。</p>
+<h2 id="7-速度变快以后，还要确认什么">7. 速度变快以后，还要确认什么</h2>
+<h3 id="7-1-一次对照，回答了一个有限的问题">7.1 一次对照，回答了一个有限的问题</h3>
+<p>两次虽然使用同一 checkpoint、同一批题，<strong>生成的回答并不完全相同</strong>。平均回答长度从 1662.54 降到 1637.20 tokens，相差约 1.52%。Token 是模型处理文本的基本单位，可能对应一个字、一个词或词的一部分。</p>
+<p>回答长度会影响计算量。这次长度差异较小，而参数更新的耗时差异很大，但当前证据仍不足以把每一部分收益完全归因到网络。</p>
+<p>目前可以确认的是：在这组硬件、软件和负载下，RDMA 配置完成了真实模型恢复与一步训练，并显著缩短了该步耗时。</p>
+<p>还不能据此给出长期平均速度、波动范围或最终训练总时长。继续测速时，应在预热后记录多个稳定步骤，并分别报告生成、更新、保存和评测；若要更严格地比较更新性能，还可以固定已经生成好的回答，减少采样差异。</p>
+<h3 id="7-2-更短的数据路径，仍需要完整的软硬件配合">7.2 更短的数据路径，仍需要完整的软硬件配合</h3>
+<p>RDMA 依赖网卡、驱动、用户态库、设备访问权限和网络配置。它们不匹配时，可能出现初始化失败、超时或卡住；拓扑与拥塞也会影响表现。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/deeplearning/nccl/archives/nccl_2275/user-guide/docs/troubleshooting.html">NCCL 排错文档</a></p>
+<p>本次做法是保留原配置与原 NCCL，隔离新增依赖，检查所有 rank 的实际通信，再验证真实模型恢复。需要回退时，从完整存档重新启动使用原配置的任务，不在正在运行的训练里替换通信库。</p>
+<p>这些检查已经通过。截至这次记录，<strong>正式的长期 GRPO 训练尚未启动</strong>，一次成功也不能替代后续稳定性观察。</p>
+<h2 id="8-自己做实验时，怎样选择">8. 自己做实验时，怎样选择</h2>
+<p>先明确自己想缩短的是“一个实验的等待时间”，还是“完成一批实验的总时间”。两种目标可能对应不同安排。</p>
+<table>
+<thead>
+<tr>
+<th>当前需求</th>
+<th>可以从哪里开始验证</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单节点已经装得下模型、速度也够用</td>
+<td>先建立单节点耗时基线，再判断增加节点的收益</td>
+</tr>
+<tr>
+<td>同时想试几个互不依赖的配置</td>
+<td>比较每台机器独立跑实验与联合训练的总体产出</td>
+</tr>
+<tr>
+<td>单节点显存不够，或一个实验确实需要更多算力</td>
+<td>选择合适的分片或并行方式，再检查跨节点通信</td>
+</tr>
+<tr>
+<td>多节点能跑，但参数更新一直很慢</td>
+<td>拆开看阶段耗时，并核对实际网络后端与连接记录</td>
+</tr>
+<tr>
+<td>RDMA 已跑通，准备长时间训练</td>
+<td>记录多步速度、失败与恢复表现，以及保存和评测开销</td>
+</tr>
+</tbody>
+</table>
+<p>比较单节点与多节点时，还应区分两个口径：固定全局工作量，看同样的活多久完成；或者增加全局工作量，看每秒能处理多少。若增加 GPU 的同时也增加了 batch，就不能只用“每步几秒”直接判断收益。</p>
+<p>也可以把时间换成 <strong>GPU 小时</strong>：GPU 数量乘以运行小时数。假设 8 张卡跑 1 小时，共 8 GPU 小时；16 张卡跑 40 分钟，约为 10.7 GPU 小时。后者更早完成，但占用的总 GPU 时间更多。这只是同类资源的计算示例，不是本次测速，也不等同于实际账单。</p>
+<p>这次对照中，GPU 数量保持 16 不变。按这一训练步骤计算，耗时约减半，相应的 GPU 时间也约减半；把它推广到完整实验，还需要计入其他阶段。</p>
+<p>下次看到“用了多少张 GPU”，可以再往前追两步：它们是在各跑各的实验，还是一起训练同一个模型？如果一起训练，数据通过什么路径交换，时间又主要花在哪个阶段？这几个问题，往往比卡数本身更能解释实际速度。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/1d3e71a4.html">https://blog.afywty.top/posts/1d3e71a4.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83/">分布式训练</a><a class="post-meta__tags" href="/tags/NCCL/">NCCL</a><a class="post-meta__tags" href="/tags/RDMA/">RDMA</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E7%A8%8B%E5%A4%8D%E7%8E%B0/">工程复现</a></div><div class="post-share"><div class="social-share" data-image="/img/ocean-notes.svg?8500" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/eaf6777a.html" title="海淀高校生存规则怪谈"><img class="cover" src="/img/ocean-notes.svg?3471" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">海淀高校生存规则怪谈</div></div><div class="info-2"><div class="info-item-1"> 原文作者：布野兔 发布平台：微信公众号「布野文化」 原文发布时间：2026 年 8 月 24 日...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/d1b0b961.html" title="两步 GRPO 跑完了，进程却在退出时崩了"><img class="cover" src="/img/ocean-notes.svg?5680" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-02</div><div class="info-item-2">两步 GRPO 跑完了，进程却在退出时崩了</div></div><div class="info-2"><div class="info-item-1">最早跑这两步 GRPO，计步器走到了 2，抽查的参数却没动。后来把回答长度放开，终于看到了参数变化，训练进程又在退出时崩了。从训练日志看，两次都跑到了最后一步。 我在复现《Self-Distilled Reasoner》。论文里的学生模型只看题目，教师还能看到参考解答，给学生逐 token 的蒸馏信号。我先用七张 GPU 跑 Qwen3-1.7B 的...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">写算法，也记录对世界的好奇。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">219</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>在 GitHub 相遇</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://scholar.google.com/citations?user=qhyKN2IAAAAJ&amp;hl=zh-CN" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap" style="color: #4285f4;"></i></a><a class="social-icon" href="mailto:1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%B8%80%E5%BC%A0-GPU%E3%80%81%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E5%92%8C%E4%B8%80%E4%B8%AA%E4%BB%BB%E5%8A%A1%EF%BC%8C%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">1. 一张 GPU、一台机器和一个任务，分别是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-GPU-%E6%98%AF%E8%AE%A1%E7%AE%97%E8%80%85%EF%BC%8C%E8%8A%82%E7%82%B9%E6%98%AF%E5%AE%83%E6%89%80%E5%9C%A8%E7%9A%84%E6%9C%BA%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 GPU 是计算者，节点是它所在的机器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E4%B8%A4%E5%8F%B0%E6%9C%BA%E5%99%A8%E9%83%BD%E5%9C%A8%E8%B7%91%EF%BC%8C%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E4%B8%A4%E4%B8%AA%E7%8B%AC%E7%AB%8B%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 两台机器都在跑，也可能是两个独立实验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-GPU-%E4%B9%8B%E9%97%B4%EF%BC%8C%E5%88%B0%E5%BA%95%E5%9C%A8%E4%BC%A0%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">2. GPU 之间，到底在传什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%9C%80%E8%A6%81%E6%8A%8A%E5%90%84%E8%87%AA%E7%9A%84%E8%AE%A1%E7%AE%97%E7%BB%93%E6%9E%9C%E6%B1%87%E6%80%BB"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 模型训练需要把各自的计算结果汇总</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%A8%A1%E5%9E%8B%E6%8B%86%E5%BC%80%E5%AD%98%EF%BC%8C%E8%BF%98%E4%BC%9A%E4%BA%A7%E7%94%9F%E5%85%B6%E4%BB%96%E9%80%9A%E4%BF%A1"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 模型拆开存，还会产生其他通信</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BB%8E%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8%E5%88%B0%E4%B8%A4%E5%8F%B0%E6%9C%BA%E5%99%A8%EF%BC%8C%E5%A4%9A%E5%87%BA%E6%9D%A5%E7%9A%84%E6%97%B6%E9%97%B4%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="toc-number">3.</span> <span class="toc-text">3. 从一台机器到两台机器，多出来的时间在哪里</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%90%8C%E6%9C%BA%E6%9C%89%E5%86%85%E9%83%A8%E8%BF%9E%E6%8E%A5%EF%BC%8C%E8%B7%A8%E6%9C%BA%E8%A6%81%E7%BB%8F%E8%BF%87%E7%BD%91%E7%BB%9C"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 同机有内部连接，跨机要经过网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%B8%A6%E5%AE%BD%E5%92%8C%E5%BB%B6%E8%BF%9F%EF%BC%8C%E6%98%AF%E4%B8%A4%E4%B8%AA%E4%B8%8D%E5%90%8C%E9%97%AE%E9%A2%98"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 带宽和延迟，是两个不同问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-TCP-Socket-%E4%B8%8E-RDMA%EF%BC%9A%E6%95%B0%E6%8D%AE%E6%80%8E%E4%B9%88%E5%88%B0%E5%8F%A6%E4%B8%80%E5%8F%B0%E6%9C%BA%E5%99%A8"><span class="toc-number">4.</span> <span class="toc-text">4. TCP Socket 与 RDMA：数据怎么到另一台机器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-TCP-Socket-%E6%98%AF%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E8%B7%AF%E5%BE%84"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 TCP Socket 是常见的网络传输路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-RDMA-%E8%AE%A9%E7%BD%91%E5%8D%A1%E6%89%BF%E6%8B%85%E6%9B%B4%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%90%AC%E8%BF%90"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 RDMA 让网卡承担更多数据搬运</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-RDMA%E3%80%81InfiniBand%E3%80%81RoCE-%E5%92%8C-NCCL%EF%BC%8C%E4%B8%8D%E6%98%AF%E5%90%8C%E4%B8%80%E5%B1%82%E7%9A%84%E5%90%8D%E8%AF%8D"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 RDMA、InfiniBand、RoCE 和 NCCL，不是同一层的名词</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%BF%99%E6%AC%A1%E5%AE%9E%E6%B5%8B%EF%BC%9A%E5%90%8C%E6%A0%B7-16-%E5%BC%A0%E5%8D%A1%EF%BC%8C%E6%97%B6%E9%97%B4%E7%9C%81%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="toc-number">5.</span> <span class="toc-text">5. 这次实测：同样 16 张卡，时间省在哪里</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E5%85%88%E6%8A%8A%E6%AF%94%E8%BE%83%E6%9D%A1%E4%BB%B6%E8%AF%B4%E6%B8%85%E6%A5%9A"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 先把比较条件说清楚</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E5%90%84%E9%98%B6%E6%AE%B5%E8%80%97%E6%97%B6"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 各阶段耗时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%9F%E6%88%90%E5%8F%AA%E5%BF%AB%E4%B8%80%E7%82%B9%EF%BC%8C%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0%E5%8D%B4%E5%BF%AB%E5%BE%88%E5%A4%9A"><span class="toc-number">5.3.</span> <span class="toc-text">5.3 为什么生成只快一点，参数更新却快很多</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%BF%99%E6%AC%A1%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B2%A1%E6%9C%89%E4%B8%80%E5%BC%80%E5%A7%8B%E5%B0%B1%E7%94%A8%E4%B8%8A-RDMA"><span class="toc-number">6.</span> <span class="toc-text">6. 这次为什么没有一开始就用上 RDMA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E6%9C%89%E7%BD%91%E5%8D%A1%E3%80%81%E5%BC%80%E4%BA%86%E5%BC%80%E5%85%B3%EF%BC%8C%E8%BF%98%E5%B7%AE%E4%B8%AD%E9%97%B4%E7%9A%84%E8%BD%AF%E4%BB%B6"><span class="toc-number">6.1.</span> <span class="toc-text">6.1 有网卡、开了开关，还差中间的软件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E7%9C%8B%E5%AE%9E%E9%99%85%E4%BC%A0%E8%BE%93%E8%AE%B0%E5%BD%95%EF%BC%8C%E5%B9%B6%E5%8C%BA%E5%88%86%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8E%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE"><span class="toc-number">6.2.</span> <span class="toc-text">6.2 看实际传输记录，并区分初始化与训练数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%80%9F%E5%BA%A6%E5%8F%98%E5%BF%AB%E4%BB%A5%E5%90%8E%EF%BC%8C%E8%BF%98%E8%A6%81%E7%A1%AE%E8%AE%A4%E4%BB%80%E4%B9%88"><span class="toc-number">7.</span> <span class="toc-text">7. 速度变快以后，还要确认什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E4%B8%80%E6%AC%A1%E5%AF%B9%E7%85%A7%EF%BC%8C%E5%9B%9E%E7%AD%94%E4%BA%86%E4%B8%80%E4%B8%AA%E6%9C%89%E9%99%90%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">7.1.</span> <span class="toc-text">7.1 一次对照，回答了一个有限的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E6%9B%B4%E7%9F%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E8%B7%AF%E5%BE%84%EF%BC%8C%E4%BB%8D%E9%9C%80%E8%A6%81%E5%AE%8C%E6%95%B4%E7%9A%84%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%85%8D%E5%90%88"><span class="toc-number">7.2.</span> <span class="toc-text">7.2 更短的数据路径，仍需要完整的软硬件配合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E8%87%AA%E5%B7%B1%E5%81%9A%E5%AE%9E%E9%AA%8C%E6%97%B6%EF%BC%8C%E6%80%8E%E6%A0%B7%E9%80%89%E6%8B%A9"><span class="toc-number">8.</span> <span class="toc-text">8. 自己做实验时，怎样选择</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1d3e71a4.html" title="GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA">GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</a><time datetime="2026-11-16T11:43:00.000Z" title="发表于 2026-11-16 19:43:00">2026-11-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/eaf6777a.html" title="海淀高校生存规则怪谈">海淀高校生存规则怪谈</a><time datetime="2026-11-03T16:00:00.000Z" title="发表于 2026-11-04 00:00:00">2026-11-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/a27c5995.html" title="我们不要再聊AI绩点科研实习vibe-coding了">我们不要再聊AI绩点科研实习vibe-coding了</a><time datetime="2026-11-02T16:00:00.000Z" title="发表于 2026-11-03 00:00:00">2026-11-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/d1b0b961.html" title="两步 GRPO 跑完了，进程却在退出时崩了">两步 GRPO 跑完了，进程却在退出时崩了</a><time datetime="2026-11-02T08:46:26.000Z" title="发表于 2026-11-02 16:46:26">2026-11-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1828b237.html" title="starrycoding周赛">starrycoding周赛</a><span>整理日期：</span><time datetime="2025-01-30T16:00:00.000Z" title="按学习顺序编排，非原始发表时间">2025-01-31</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><link rel="stylesheet" href="/lib/katex/katex.min.css"><style>#article-container .katex { display: inline; }
+#article-container .katex-display > .katex { display: block; }</style></div><script src="/js/click-fireworks.js?v=20261024" defer></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

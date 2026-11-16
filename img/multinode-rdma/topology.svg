@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 800" role="img" aria-labelledby="title desc">
+  <title id="title">单节点、两个独立任务与两节点联合训练</title>
+  <desc id="desc">单节点多卡在一个节点内协作。两个独立任务各用一台机器，无需相互同步训练梯度。两节点联合训练则共同处理一个任务，通过节点间网络同步。每组画两张卡仅作示意。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#207468" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="760" height="800" rx="16" fill="#f7f8f5"/>
+  <g font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif" fill="#233a42">
+    <text x="30" y="47" font-size="29" font-weight="700">机器的数量，与任务的组织方式</text>
+    <text x="30" y="95" font-size="23" font-weight="700">① 单节点多卡：一台机器，一个任务</text>
+    <rect x="30" y="115" width="320" height="148" rx="12" fill="#e6f2ed" stroke="#87b8a9" stroke-width="2"/>
+    <text x="52" y="151" font-size="23">节点 A · 任务甲</text>
+    <rect x="52" y="174" width="108" height="57" rx="8" fill="#fff" stroke="#87b8a9"/>
+    <rect x="220" y="174" width="108" height="57" rx="8" fill="#fff" stroke="#87b8a9"/>
+    <text x="106" y="211" text-anchor="middle" font-size="24">GPU</text>
+    <text x="274" y="211" text-anchor="middle" font-size="24">GPU</text>
+    <path d="M169 202H211" stroke="#207468" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="387" y="185" font-size="23">GPU 在节点内交换数据</text>
+    <text x="387" y="221" font-size="21" fill="#556b73">例如 PCIe、NVLink</text>
+    <text x="30" y="315" font-size="23" font-weight="700">② 两个独立任务：各跑各的实验</text>
+    <rect x="30" y="336" width="320" height="149" rx="12" fill="#e6f2ed" stroke="#87b8a9" stroke-width="2"/>
+    <rect x="410" y="336" width="320" height="149" rx="12" fill="#eef0f8" stroke="#a9b2d2" stroke-width="2"/>
+    <text x="52" y="373" font-size="23">节点 A · 任务甲</text>
+    <text x="432" y="373" font-size="23">节点 B · 任务乙</text>
+    <g fill="#fff" stroke="#87b8a9"><rect x="52" y="398" width="108" height="57" rx="8"/><rect x="220" y="398" width="108" height="57" rx="8"/></g>
+    <g fill="#fff" stroke="#a9b2d2"><rect x="432" y="398" width="108" height="57" rx="8"/><rect x="600" y="398" width="108" height="57" rx="8"/></g>
+    <g text-anchor="middle" font-size="24"><text x="106" y="435">GPU</text><text x="274" y="435">GPU</text><text x="486" y="435">GPU</text><text x="654" y="435">GPU</text></g>
+    <path d="M169 426H211M549 426H591" stroke="#207468" stroke-width="2"/>
+    <text x="380" y="521" text-anchor="middle" font-size="22" fill="#556b73">两个任务无需彼此同步训练梯度</text>
+    <text x="30" y="579" font-size="23" font-weight="700">③ 两节点联合训练：一起完成任务甲</text>
+    <rect x="30" y="600" width="700" height="163" rx="12" fill="#e6f2ed" stroke="#87b8a9" stroke-width="2"/>
+    <rect x="50" y="621" width="238" height="120" rx="8" fill="#fff" stroke="#87b8a9"/>
+    <rect x="472" y="621" width="238" height="120" rx="8" fill="#fff" stroke="#87b8a9"/>
+    <text x="169" y="659" text-anchor="middle" font-size="23">节点 A</text><text x="591" y="659" text-anchor="middle" font-size="23">节点 B</text>
+    <text x="169" y="709" text-anchor="middle" font-size="24">GPU ↔ GPU</text><text x="591" y="709" text-anchor="middle" font-size="24">GPU ↔ GPU</text>
+    <path d="M305 703H455" stroke="#207468" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="380" y="661" text-anchor="middle" font-size="22">跨节点通信</text>
+    <text x="380" y="735" text-anchor="middle" font-size="18">Socket / RDMA</text>
+  </g>
+</svg>

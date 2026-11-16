@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 740" role="img" aria-labelledby="title desc">
+  <title id="title">常见 GPU Socket 传输与 GPUDirect RDMA 数据路径</title>
+  <desc id="desc">上图的常见 Socket 路径经主机内存中转和 CPU 的 TCP/IP 网络栈处理。下图中 GPU 与支持 GPUDirect RDMA 的网卡直接交换数据。两者都经过节点间网络，连接建立和控制仍有 CPU 与软件参与。</desc>
+  <defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#44636c" stroke-width="1.5"/></marker></defs>
+  <rect width="820" height="740" rx="16" fill="#f7f8f5"/>
+  <g font-family="Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif" fill="#233a42" text-anchor="middle">
+    <text x="30" y="45" text-anchor="start" font-size="28" font-weight="700">常见 TCP Socket 路径</text>
+    <rect x="30" y="72" width="320" height="289" rx="12" fill="#f7ede2" stroke="#c9a580" stroke-width="2"/>
+    <rect x="470" y="72" width="320" height="289" rx="12" fill="#f7ede2" stroke="#c9a580" stroke-width="2"/>
+    <text x="190" y="106" font-size="22">节点 A</text><text x="630" y="106" font-size="22">节点 B</text>
+    <g fill="#fff" stroke="#c9a580"><rect x="70" y="123" width="240" height="44" rx="7"/><rect x="510" y="123" width="240" height="44" rx="7"/><rect x="70" y="202" width="240" height="68" rx="7"/><rect x="510" y="202" width="240" height="68" rx="7"/><rect x="105" y="305" width="170" height="39" rx="7"/><rect x="545" y="305" width="170" height="39" rx="7"/></g>
+    <g font-size="23"><text x="190" y="153">GPU 显存</text><text x="630" y="153">GPU 显存</text><text x="190" y="229">主机内存中转</text><text x="630" y="229">主机内存中转</text><text x="190" y="332">网卡</text><text x="630" y="332">网卡</text></g>
+    <g font-size="18" fill="#556b73"><text x="190" y="256">CPU / TCP/IP 网络栈</text><text x="630" y="256">CPU / TCP/IP 网络栈</text></g>
+    <g fill="none" stroke="#44636c" stroke-width="2" marker-end="url(#arrow)"><path d="M190 173V194"/><path d="M190 277V297"/><path d="M630 195V174"/><path d="M630 297V278"/><path d="M284 325H536"/></g>
+    <text x="410" y="305" font-size="20">网络</text>
+    <text x="30" y="421" text-anchor="start" font-size="28" font-weight="700">GPUDirect RDMA 路径</text>
+    <rect x="30" y="448" width="320" height="202" rx="12" fill="#e6f2ed" stroke="#87b8a9" stroke-width="2"/>
+    <rect x="470" y="448" width="320" height="202" rx="12" fill="#e6f2ed" stroke="#87b8a9" stroke-width="2"/>
+    <text x="190" y="483" font-size="22">节点 A</text><text x="630" y="483" font-size="22">节点 B</text>
+    <g fill="#fff" stroke="#87b8a9"><rect x="70" y="500" width="240" height="44" rx="7"/><rect x="510" y="500" width="240" height="44" rx="7"/><rect x="70" y="596" width="240" height="39" rx="7"/><rect x="510" y="596" width="240" height="39" rx="7"/></g>
+    <g font-size="23"><text x="190" y="530">GPU 显存</text><text x="630" y="530">GPU 显存</text><text x="190" y="623">RDMA 网卡</text><text x="630" y="623">RDMA 网卡</text></g>
+    <g fill="none" stroke="#207468" stroke-width="2.5" marker-end="url(#arrow)"><path d="M190 552V586"/><path d="M630 586V552"/><path d="M320 616H500"/></g>
+    <text x="410" y="596" font-size="20">网络</text>
+    <g font-size="19" fill="#207468"><text x="263" y="575">直接交换</text><text x="703" y="575">直接交换</text></g>
+    <text x="410" y="691" font-size="22">减少数据中转，不改变模型本身的计算量</text>
+    <text x="410" y="723" font-size="19" fill="#556b73">简化示意；连接建立与控制仍需要 CPU 和软件参与</text>
+  </g>
+</svg>
