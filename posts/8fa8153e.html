@@ -1,0 +1,277 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>A800 与 H20 上的模型部署：CUDA 兼容性与故障归因 | 爱飞鱼的blog</title><meta name="author" content="WTY"><meta name="copyright" content="WTY"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#f6f7f4"><meta name="description" content="基于两套 GPU 环境的实测，分析驱动库选择、设备编号、显存预算、原生扩展与算子编译，并讨论运行中断时如何限定根因。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A800 与 H20 上的模型部署：CUDA 兼容性与故障归因">
+<meta property="og:url" content="https://blog.afywty.top/posts/8fa8153e.html">
+<meta property="og:site_name" content="爱飞鱼的blog">
+<meta property="og:description" content="基于两套 GPU 环境的实测，分析驱动库选择、设备编号、显存预算、原生扩展与算子编译，并讨论运行中断时如何限定根因。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.afywty.top/img/ocean-notes.svg?5490">
+<meta property="article:published_time" content="2026-11-17T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-11-18T00:02:01.477Z">
+<meta property="article:author" content="WTY">
+<meta property="article:tag" content="CUDA">
+<meta property="article:tag" content="vLLM">
+<meta property="article:tag" content="工程复现">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.afywty.top/img/ocean-notes.svg?5490"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "A800 与 H20 上的模型部署：CUDA 兼容性与故障归因",
+  "url": "https://blog.afywty.top/posts/8fa8153e.html",
+  "image": "https://blog.afywty.top/img/ocean-notes.svg?5490",
+  "datePublished": "2026-11-17T00:00:00.000Z",
+  "dateModified": "2026-11-18T00:02:01.477Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "WTY",
+      "url": "https://blog.afywty.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://blog.afywty.top/posts/8fa8153e.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#101f28')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f7f4')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><link rel="stylesheet" href="/css/technical-reading.css?v=20261102"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":-1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'A800 与 H20 上的模型部署：CUDA 兼容性与故障归因',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/notebook.css?v=20261103-home-sections"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">220</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/acm/"><i class="fa-fw fas fa-code"></i><span> ACM</span></a></div><div class="menus_item"><a class="site-page" href="/llm/"><i class="fa-fw fas fa-brain"></i><span> LLM</span></a></div><div class="menus_item"><a class="site-page" href="/notes/"><i class="fa-fw fas fa-headphones"></i><span> 沿途拾记</span></a></div><div class="menus_item"><a class="site-page" href="/thoughts/"><i class="fa-fw fas fa-pen-nib"></i><span> 我的杂谈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img fixed" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">爱飞鱼的blog</span></a><a class="nav-page-title" href="/"><span class="site-name">A800 与 H20 上的模型部署：CUDA 兼容性与故障归因</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/acm/"><i class="fa-fw fas fa-code"></i><span> ACM</span></a></div><div class="menus_item"><a class="site-page" href="/llm/"><i class="fa-fw fas fa-brain"></i><span> LLM</span></a></div><div class="menus_item"><a class="site-page" href="/notes/"><i class="fa-fw fas fa-headphones"></i><span> 沿途拾记</span></a></div><div class="menus_item"><a class="site-page" href="/thoughts/"><i class="fa-fw fas fa-pen-nib"></i><span> 我的杂谈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="https://afywty.top/"><i class="fa-fw fas fa-user"></i><span> 个人主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div class="technical-reading" id="post"><div id="post-info"><h1 class="post-title">A800 与 H20 上的模型部署：CUDA 兼容性与故障归因</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-11-17T00:00:00.000Z" title="发表于 2026-11-17 08:00:00">2026-11-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-11-18T00:02:01.477Z" title="更新于 2026-11-18 08:02:01">2026-11-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/">LLM</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/LLM/%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/">模型训练</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;已经&quot;,&quot;messageNext&quot;:&quot;天没有更新，文章内容无法保证完全正确&quot;,&quot;postUpdate&quot;:&quot;2026-11-18 08:02:01&quot;}" hidden></div><p>在 A800 上，进程已经找到了 CUDA 驱动库，却在第一次调用时收到错误码 803。在 H20 上，小矩阵乘法已经通过，构建模型算子时，链接器却报告找不到 CUDA 驱动库。两条日志都指向 <code>libcuda</code>。如果只按库名检索解决方案，很容易在一个原本能正常计算的环境里动错驱动。</p>
+<p>我在维护 A800 训练环境、将 vLLM 裁判服务迁移到 H20 时，遇到的不止这两种错误。本文讨论一个具体问题：<strong>换卡后出现的故障，哪些由 GPU 指令架构决定，哪些取决于容器、框架或任务配置？</strong> 两组记录涉及不同驱动、镜像和软件版本。能够归因到架构的结论，来自对编译目标的直接检查；其余结论，则取决于有没有做过足以区分两种解释的对照。</p>
+<span id="more"></span>
+<h2 id="驱动初始化：同一个环境变量为何产生两种结果">驱动初始化：同一个环境变量为何产生两种结果</h2>
+<p><code>nvidia-smi</code> 能读出 A800 的设备信息，应用仍可能在 <code>cuInit</code> 处失败。前者查询设备状态，后者要通过应用进程实际加载的驱动库初始化 CUDA。NVIDIA 将返回码 803 定义为驱动版本不匹配。在两套使用 525 系列宿主驱动的 A800 容器上，我比较了库搜索配置、进程实际加载的版本和初始化结果。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/deploy/cuda-compatibility/latest/forward-compatibility.html">NVIDIA CUDA 兼容说明</a></p>
+<table>
+<thead>
+<tr>
+<th>加载条件</th>
+<th>容器 A：实际库 / 初始化结果</th>
+<th>容器 B：实际库 / 初始化结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>镜像默认配置</td>
+<td>575 / 803</td>
+<td>570 / 803</td>
+</tr>
+<tr>
+<td>取消 <code>LD_LIBRARY_PATH</code> 设置</td>
+<td>525 / 成功</td>
+<td>570 / 803</td>
+</tr>
+<tr>
+<td>在应用入口显式选择匹配的宿主库</td>
+<td>前一项已通过</td>
+<td>525 / 成功，FP32 和 BF16 计算通过</td>
+</tr>
+</tbody>
+</table>
+<p>容器 B 提供了最有判别力的一组对照。取消变量改变了启动配置，却没有改变进程加载的文件，错误码也原样保留。直到加载版本从 570 变为 525，初始化结果才改变。因此，在这套环境中可验证的修复条件是<strong>应用进程选中了兼容的库</strong>。“取消一个环境变量”只是容器 A 中实现这一条件的手段。</p>
+<p>H20 上也做了基础计算检查。该环境使用自身的 CUDA 兼容库，通过了 FP32 和 BF16 的前向、反向计算。这给迁移划出了一条实际边界：旧 A800 上验证过的库选择，不能直接当作 H20 的环境要求。</p>
+<h2 id="原生扩展：软件版本相同，能执行的-GPU-代码可能不同">原生扩展：软件版本相同，能执行的 GPU 代码可能不同</h2>
+<p><strong>A800 的失效发生在原生库初始化阶段。</strong> 单卡矩阵乘法已经通过，第一次执行 <code>all_reduce</code> 却收到 <code>SIGSEGV</code>。这个小测试只要求每张卡贡献一个数，再让所有卡得到总和。原生调用栈停在 <code>ncclInitKernelsForDevice → cudaFuncGetAttributes</code>，说明进程当时正在查询 NCCL 设备内核的属性。改变通信传输方式后，故障仍落在同一条栈上。</p>
+<p>随后我保留 NCCL 2.27.5 的上游源码和版本，用 CUDA 12.4 构建面向 A800 的库，静态链接 CUDA 运行时。应用改用该产物后，集合运算和后续训练均通过。H20 则使用环境原有的 NCCL 2.27.5 通过了集合运算。这个对照解释了为什么排查时要记录<strong>构建工具链和实际加载文件</strong>。A800 上的一次重构建同时改变了编译与链接条件，无法据此把底层缺陷精确归给驱动中的某个函数。</p>
+<p><strong>H20 迁移涉及另一项可以直接检查的属性：二进制里有哪些架构目标。</strong> 这批 A800 的计算能力为 8.0，H20 为 9.0，对应常见编译标记 <code>sm_80</code> 与 <code>sm_90</code>。模型权重是数值，可以继续使用；执行这些数值运算的原生扩展，还要有目标 GPU 可以执行的代码。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/hopper-compatibility-guide/index.html">NVIDIA Hopper 兼容指南</a></p>
+<table>
+<thead>
+<tr>
+<th>从旧环境取出的产物</th>
+<th>实际检查结果</th>
+<th>迁移判断</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>裁判环境中的 vLLM 构建</td>
+<td>GPU 编译产物仅覆盖 <code>sm_80</code></td>
+<td>为 H20 选用覆盖其架构的构建</td>
+</tr>
+<tr>
+<td>FlashAttention 2.8.3 安装包</td>
+<td>用 <code>cuobjdump</code> 检查扩展，发现同时含有 <code>sm_80</code> 与 <code>sm_90</code> 机器码</td>
+<td>可作为复用候选。静态检查仍留下两个问题：扩展能否与目标 PyTorch 正确链接，模型能否实际调用它</td>
+</tr>
+</tbody>
+</table>
+<p>这两个包来自同一套旧环境，却需要不同处理。安装包的来源和版本号，都不能代替对包内容的检查。</p>
+<h2 id="H20-上的即时编译：头文件、目标文件与动态库">H20 上的即时编译：头文件、目标文件与动态库</h2>
+<p>H20 上的 Qwen3.5-35B-A3B 裁判使用 vLLM 0.17.0 和 Torch 2.10.0+cu129。模型处理输入时需要 Gated DeltaNet 算子，对应的 FlashInfer 实现要在目标环境编译。此前的矩阵乘法直接执行已有内核，没有覆盖开发工具链。这里出现了两种症状相近、修复位置不同的缺失。</p>
+<table>
+<thead>
+<tr>
+<th>失败位置</th>
+<th>可观测证据</th>
+<th>干预与验证</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编译源码</td>
+<td>编译器报告 <code>cuda_runtime.h: No such file or directory</code></td>
+<td>补齐 CUDA 12.9 开发头文件和 CCCL 后，成功生成面向 <code>sm_90a</code> 的 34 个目标文件</td>
+</tr>
+<tr>
+<td>链接动态库</td>
+<td>目标文件齐全，链接器仍报告 <code>cannot find -lcuda</code></td>
+<td>在项目开发库目录提供指向已验证兼容库的 <code>libcuda.so</code>；复用原来的 34 个目标文件，链接、加载均通过</td>
+</tr>
+</tbody>
+</table>
+<p>第二个错误尤其容易误判。运行时可以加载带版本号的驱动库，而链接器收到 <code>-lcuda</code> 后，还需要在它的搜索目录中按约定名称找到库。因此，<strong>同一进程环境可以具备运行 CUDA 的条件，同时缺少构建新算子的条件</strong>。最终验证使用两张 H20、BF16 和双卡张量并行加载真实模型。四条顺序请求和八条并发请求都走完了判分流程；该检查覆盖模型加载、生成和结果解析。</p>
+<h2 id="换卡故障的归因边界">换卡故障的归因边界</h2>
+<p>还有三项 A800 侧的观察，容易在迁移记录里被笼统地写成“显卡不兼容”。把故障触发条件写全，才知道哪些处理值得带到 H20 环境。</p>
+<table>
+<thead>
+<tr>
+<th>观察</th>
+<th>判别依据</th>
+<th>结论的适用范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vLLM 0.11.0 在解析设备时抛出 <code>ValueError</code></td>
+<td>该版本的映射代码对 UUID 字符串调用 <code>int()</code>。在引擎入口改用数字编号，并核验同一设备的 UUID 后，初始化越过原失败点</td>
+<td>属于该框架入口对设备标识格式的限制。换 GPU 时应按新环境重新核对映射</td>
+</tr>
+<tr>
+<td>引擎在仍有 26,805 MiB 空闲显存时中止</td>
+<td>新增进程占用 2,250 MiB，触发了测试设定的 2,048 MiB 上限。调整预算后，小模型在空闲卡上完成生成，进程新增显存峰值为 3,404 MiB</td>
+<td>退出由任务预算触发。这次观测不能用于推算另一型号的显存需求</td>
+</tr>
+<tr>
+<td>训练中断，同卡留下 Xid 61、45 和推理超时记录</td>
+<td>内核事件与推理实例可按设备身份对应，超时行缺少独立时间戳</td>
+<td>能定位到设备及其驱动路径，板卡、固件与驱动的具体责任仍待区分。<a target="_blank" rel="noopener" href="https://docs.nvidia.com/deploy/xid-errors/latest/introduction.html">NVIDIA Xid 说明</a></td>
+</tr>
+</tbody>
+</table>
+<p>这次迁移中，我沿用了模型权重，为 H20 更换了仅覆盖 A800 的 vLLM 构建；含有两种架构机器码的扩展则保留为待验证的复用候选。两端各自通过的驱动初始化和设备内核测试，决定了旧环境的哪些修补可以省去。后来再遇到“模型起不来”，我会先作一个有区分度的检查：程序究竟停在驱动初始化、设备内核加载、源码编译，还是动态链接？确认这一点，才知道换卡真正改变了哪个条件。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://blog.afywty.top">WTY</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://blog.afywty.top/posts/8fa8153e.html">https://blog.afywty.top/posts/8fa8153e.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://blog.afywty.top" target="_blank">爱飞鱼的blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CUDA/">CUDA</a><a class="post-meta__tags" href="/tags/vLLM/">vLLM</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E7%A8%8B%E5%A4%8D%E7%8E%B0/">工程复现</a></div><div class="post-share"><div class="social-share" data-image="/img/ocean-notes.svg?5490" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/1d3e71a4.html" title="GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA"><img class="cover" src="/img/ocean-notes.svg?8920" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</div></div><div class="info-2"><div class="info-item-1">同样的模型、同样的 16 张 GPU，一步训练从约 393 秒缩短到 197 秒。变化发生在两台机器之间：补齐通信依赖后，跨节点的数据传输从 TCP Socket 切换到了 RDMA。 最有意思的是，并非每个阶段都快了一倍。生成回答从 86.4 秒变成 81.9 秒，变化不大；参数更新却从 212.5 秒缩短到了 69.8...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/d1b0b961.html" title="两步 GRPO 跑完了，进程却在退出时崩了"><img class="cover" src="/img/ocean-notes.svg?8593" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-02</div><div class="info-item-2">两步 GRPO 跑完了，进程却在退出时崩了</div></div><div class="info-2"><div class="info-item-1">最早跑这两步 GRPO，计步器走到了 2，抽查的参数却没动。后来把回答长度放开，终于看到了参数变化，训练进程又在退出时崩了。从训练日志看，两次都跑到了最后一步。 我在复现《Self-Distilled Reasoner》。论文里的学生模型只看题目，教师还能看到参考解答，给学生逐 token 的蒸馏信号。我先用七张 GPU 跑 Qwen3-1.7B 的...</div></div></div></a><a class="pagination-related" href="/posts/1d3e71a4.html" title="GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA"><img class="cover" src="/img/ocean-notes.svg?8920" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-11-16</div><div class="info-item-2">GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</div></div><div class="info-2"><div class="info-item-1">同样的模型、同样的 16 张 GPU，一步训练从约 393 秒缩短到 197 秒。变化发生在两台机器之间：补齐通信依赖后，跨节点的数据传输从 TCP Socket 切换到了 RDMA。 最有意思的是，并非每个阶段都快了一倍。生成回答从 86.4 秒变成 81.9 秒，变化不大；参数更新却从 212.5 秒缩短到了 69.8...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/user.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">WTY</div><div class="author-info-description">写算法，也记录对世界的好奇。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">220</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/my-mathmaster"><i class="fab fa-github"></i><span>在 GitHub 相遇</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/my-mathmaster" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="https://scholar.google.com/citations?user=qhyKN2IAAAAJ&amp;hl=zh-CN" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap" style="color: #4285f4;"></i></a><a class="social-icon" href="mailto:1317555317@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A9%B1%E5%8A%A8%E5%88%9D%E5%A7%8B%E5%8C%96%EF%BC%9A%E5%90%8C%E4%B8%80%E4%B8%AA%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%B8%BA%E4%BD%95%E4%BA%A7%E7%94%9F%E4%B8%A4%E7%A7%8D%E7%BB%93%E6%9E%9C"><span class="toc-number">1.</span> <span class="toc-text">驱动初始化：同一个环境变量为何产生两种结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%94%9F%E6%89%A9%E5%B1%95%EF%BC%9A%E8%BD%AF%E4%BB%B6%E7%89%88%E6%9C%AC%E7%9B%B8%E5%90%8C%EF%BC%8C%E8%83%BD%E6%89%A7%E8%A1%8C%E7%9A%84-GPU-%E4%BB%A3%E7%A0%81%E5%8F%AF%E8%83%BD%E4%B8%8D%E5%90%8C"><span class="toc-number">2.</span> <span class="toc-text">原生扩展：软件版本相同，能执行的 GPU 代码可能不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#H20-%E4%B8%8A%E7%9A%84%E5%8D%B3%E6%97%B6%E7%BC%96%E8%AF%91%EF%BC%9A%E5%A4%B4%E6%96%87%E4%BB%B6%E3%80%81%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E4%B8%8E%E5%8A%A8%E6%80%81%E5%BA%93"><span class="toc-number">3.</span> <span class="toc-text">H20 上的即时编译：头文件、目标文件与动态库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E5%8D%A1%E6%95%85%E9%9A%9C%E7%9A%84%E5%BD%92%E5%9B%A0%E8%BE%B9%E7%95%8C"><span class="toc-number">4.</span> <span class="toc-text">换卡故障的归因边界</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/8fa8153e.html" title="A800 与 H20 上的模型部署：CUDA 兼容性与故障归因">A800 与 H20 上的模型部署：CUDA 兼容性与故障归因</a><time datetime="2026-11-17T00:00:00.000Z" title="发表于 2026-11-17 08:00:00">2026-11-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1d3e71a4.html" title="GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA">GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</a><time datetime="2026-11-16T11:43:00.000Z" title="发表于 2026-11-16 19:43:00">2026-11-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/eaf6777a.html" title="海淀高校生存规则怪谈">海淀高校生存规则怪谈</a><time datetime="2026-11-03T16:00:00.000Z" title="发表于 2026-11-04 00:00:00">2026-11-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/a27c5995.html" title="我们不要再聊AI绩点科研实习vibe-coding了">我们不要再聊AI绩点科研实习vibe-coding了</a><time datetime="2026-11-02T16:00:00.000Z" title="发表于 2026-11-03 00:00:00">2026-11-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/d1b0b961.html" title="两步 GRPO 跑完了，进程却在退出时崩了">两步 GRPO 跑完了，进程却在退出时崩了</a><time datetime="2026-11-02T08:46:26.000Z" title="发表于 2026-11-02 16:46:26">2026-11-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2026 By WTY</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Copyright 爱飞鱼</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><link rel="stylesheet" href="/lib/katex/katex.min.css"><style>#article-container .katex { display: inline; }
+#article-container .katex-display > .katex { display: block; }</style></div><script src="/js/click-fireworks.js?v=20261024" defer></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

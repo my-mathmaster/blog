@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>A800 与 H20 上的模型部署：CUDA 兼容性与故障归因</title>
+      <link href="/posts/8fa8153e.html"/>
+      <url>/posts/8fa8153e.html</url>
+      
+        <content type="html"><![CDATA[<p>在 A800 上，进程已经找到了 CUDA 驱动库，却在第一次调用时收到错误码 803。在 H20 上，小矩阵乘法已经通过，构建模型算子时，链接器却报告找不到 CUDA 驱动库。两条日志都指向 <code>libcuda</code>。如果只按库名检索解决方案，很容易在一个原本能正常计算的环境里动错驱动。</p><p>我在维护 A800 训练环境、将 vLLM 裁判服务迁移到 H20 时，遇到的不止这两种错误。本文讨论一个具体问题：<strong>换卡后出现的故障，哪些由 GPU 指令架构决定，哪些取决于容器、框架或任务配置？</strong> 两组记录涉及不同驱动、镜像和软件版本。能够归因到架构的结论，来自对编译目标的直接检查；其余结论，则取决于有没有做过足以区分两种解释的对照。</p><span id="more"></span><h2 id="驱动初始化：同一个环境变量为何产生两种结果">驱动初始化：同一个环境变量为何产生两种结果</h2><p><code>nvidia-smi</code> 能读出 A800 的设备信息，应用仍可能在 <code>cuInit</code> 处失败。前者查询设备状态，后者要通过应用进程实际加载的驱动库初始化 CUDA。NVIDIA 将返回码 803 定义为驱动版本不匹配。在两套使用 525 系列宿主驱动的 A800 容器上，我比较了库搜索配置、进程实际加载的版本和初始化结果。<a href="https://docs.nvidia.com/deploy/cuda-compatibility/latest/forward-compatibility.html">NVIDIA CUDA 兼容说明</a></p><table><thead><tr><th>加载条件</th><th>容器 A：实际库 / 初始化结果</th><th>容器 B：实际库 / 初始化结果</th></tr></thead><tbody><tr><td>镜像默认配置</td><td>575 / 803</td><td>570 / 803</td></tr><tr><td>取消 <code>LD_LIBRARY_PATH</code> 设置</td><td>525 / 成功</td><td>570 / 803</td></tr><tr><td>在应用入口显式选择匹配的宿主库</td><td>前一项已通过</td><td>525 / 成功，FP32 和 BF16 计算通过</td></tr></tbody></table><p>容器 B 提供了最有判别力的一组对照。取消变量改变了启动配置，却没有改变进程加载的文件，错误码也原样保留。直到加载版本从 570 变为 525，初始化结果才改变。因此，在这套环境中可验证的修复条件是<strong>应用进程选中了兼容的库</strong>。“取消一个环境变量”只是容器 A 中实现这一条件的手段。</p><p>H20 上也做了基础计算检查。该环境使用自身的 CUDA 兼容库，通过了 FP32 和 BF16 的前向、反向计算。这给迁移划出了一条实际边界：旧 A800 上验证过的库选择，不能直接当作 H20 的环境要求。</p><h2 id="原生扩展：软件版本相同，能执行的-GPU-代码可能不同">原生扩展：软件版本相同，能执行的 GPU 代码可能不同</h2><p><strong>A800 的失效发生在原生库初始化阶段。</strong> 单卡矩阵乘法已经通过，第一次执行 <code>all_reduce</code> 却收到 <code>SIGSEGV</code>。这个小测试只要求每张卡贡献一个数，再让所有卡得到总和。原生调用栈停在 <code>ncclInitKernelsForDevice → cudaFuncGetAttributes</code>，说明进程当时正在查询 NCCL 设备内核的属性。改变通信传输方式后，故障仍落在同一条栈上。</p><p>随后我保留 NCCL 2.27.5 的上游源码和版本，用 CUDA 12.4 构建面向 A800 的库，静态链接 CUDA 运行时。应用改用该产物后，集合运算和后续训练均通过。H20 则使用环境原有的 NCCL 2.27.5 通过了集合运算。这个对照解释了为什么排查时要记录<strong>构建工具链和实际加载文件</strong>。A800 上的一次重构建同时改变了编译与链接条件，无法据此把底层缺陷精确归给驱动中的某个函数。</p><p><strong>H20 迁移涉及另一项可以直接检查的属性：二进制里有哪些架构目标。</strong> 这批 A800 的计算能力为 8.0，H20 为 9.0，对应常见编译标记 <code>sm_80</code> 与 <code>sm_90</code>。模型权重是数值，可以继续使用；执行这些数值运算的原生扩展，还要有目标 GPU 可以执行的代码。<a href="https://docs.nvidia.com/cuda/hopper-compatibility-guide/index.html">NVIDIA Hopper 兼容指南</a></p><table><thead><tr><th>从旧环境取出的产物</th><th>实际检查结果</th><th>迁移判断</th></tr></thead><tbody><tr><td>裁判环境中的 vLLM 构建</td><td>GPU 编译产物仅覆盖 <code>sm_80</code></td><td>为 H20 选用覆盖其架构的构建</td></tr><tr><td>FlashAttention 2.8.3 安装包</td><td>用 <code>cuobjdump</code> 检查扩展，发现同时含有 <code>sm_80</code> 与 <code>sm_90</code> 机器码</td><td>可作为复用候选。静态检查仍留下两个问题：扩展能否与目标 PyTorch 正确链接，模型能否实际调用它</td></tr></tbody></table><p>这两个包来自同一套旧环境，却需要不同处理。安装包的来源和版本号，都不能代替对包内容的检查。</p><h2 id="H20-上的即时编译：头文件、目标文件与动态库">H20 上的即时编译：头文件、目标文件与动态库</h2><p>H20 上的 Qwen3.5-35B-A3B 裁判使用 vLLM 0.17.0 和 Torch 2.10.0+cu129。模型处理输入时需要 Gated DeltaNet 算子，对应的 FlashInfer 实现要在目标环境编译。此前的矩阵乘法直接执行已有内核，没有覆盖开发工具链。这里出现了两种症状相近、修复位置不同的缺失。</p><table><thead><tr><th>失败位置</th><th>可观测证据</th><th>干预与验证</th></tr></thead><tbody><tr><td>编译源码</td><td>编译器报告 <code>cuda_runtime.h: No such file or directory</code></td><td>补齐 CUDA 12.9 开发头文件和 CCCL 后，成功生成面向 <code>sm_90a</code> 的 34 个目标文件</td></tr><tr><td>链接动态库</td><td>目标文件齐全，链接器仍报告 <code>cannot find -lcuda</code></td><td>在项目开发库目录提供指向已验证兼容库的 <code>libcuda.so</code>；复用原来的 34 个目标文件，链接、加载均通过</td></tr></tbody></table><p>第二个错误尤其容易误判。运行时可以加载带版本号的驱动库，而链接器收到 <code>-lcuda</code> 后，还需要在它的搜索目录中按约定名称找到库。因此，<strong>同一进程环境可以具备运行 CUDA 的条件，同时缺少构建新算子的条件</strong>。最终验证使用两张 H20、BF16 和双卡张量并行加载真实模型。四条顺序请求和八条并发请求都走完了判分流程；该检查覆盖模型加载、生成和结果解析。</p><h2 id="换卡故障的归因边界">换卡故障的归因边界</h2><p>还有三项 A800 侧的观察，容易在迁移记录里被笼统地写成“显卡不兼容”。把故障触发条件写全，才知道哪些处理值得带到 H20 环境。</p><table><thead><tr><th>观察</th><th>判别依据</th><th>结论的适用范围</th></tr></thead><tbody><tr><td>vLLM 0.11.0 在解析设备时抛出 <code>ValueError</code></td><td>该版本的映射代码对 UUID 字符串调用 <code>int()</code>。在引擎入口改用数字编号，并核验同一设备的 UUID 后，初始化越过原失败点</td><td>属于该框架入口对设备标识格式的限制。换 GPU 时应按新环境重新核对映射</td></tr><tr><td>引擎在仍有 26,805 MiB 空闲显存时中止</td><td>新增进程占用 2,250 MiB，触发了测试设定的 2,048 MiB 上限。调整预算后，小模型在空闲卡上完成生成，进程新增显存峰值为 3,404 MiB</td><td>退出由任务预算触发。这次观测不能用于推算另一型号的显存需求</td></tr><tr><td>训练中断，同卡留下 Xid 61、45 和推理超时记录</td><td>内核事件与推理实例可按设备身份对应，超时行缺少独立时间戳</td><td>能定位到设备及其驱动路径，板卡、固件与驱动的具体责任仍待区分。<a href="https://docs.nvidia.com/deploy/xid-errors/latest/introduction.html">NVIDIA Xid 说明</a></td></tr></tbody></table><p>这次迁移中，我沿用了模型权重，为 H20 更换了仅覆盖 A800 的 vLLM 构建；含有两种架构机器码的扩展则保留为待验证的复用候选。两端各自通过的驱动初始化和设备内核测试，决定了旧环境的哪些修补可以省去。后来再遇到“模型起不来”，我会先作一个有区分度的检查：程序究竟停在驱动初始化、设备内核加载、源码编译，还是动态链接？确认这一点，才知道换卡真正改变了哪个条件。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> LLM </category>
+          
+          <category> 模型训练 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CUDA </tag>
+            
+            <tag> vLLM </tag>
+            
+            <tag> 工程复现 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>GPU 多了，训练就会更快吗？读懂单节点、多节点与 RDMA</title>
       <link href="/posts/1d3e71a4.html"/>
       <url>/posts/1d3e71a4.html</url>
@@ -22,13 +53,13 @@
       
         <tags>
             
+            <tag> 工程复现 </tag>
+            
             <tag> 分布式训练 </tag>
             
             <tag> NCCL </tag>
             
             <tag> RDMA </tag>
-            
-            <tag> 工程复现 </tag>
             
         </tags>
       
@@ -117,11 +148,11 @@
       
         <tags>
             
+            <tag> vLLM </tag>
+            
             <tag> 工程复现 </tag>
             
             <tag> GRPO </tag>
-            
-            <tag> vLLM </tag>
             
         </tags>
       
